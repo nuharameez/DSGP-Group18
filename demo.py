@@ -48,14 +48,14 @@ X = np.array(X)
 y = np.array(y)
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=True)
 
 # Flatten or reshape the images
 X_train_flattened = X_train.reshape(X_train.shape[0], -1)
 X_test_flattened = X_test.reshape(X_test.shape[0], -1)
 
 # Initialize the decision tree classifier
-clf = DecisionTreeClassifier(random_state=42)
+clf = DecisionTreeClassifier(random_state=42, max_depth=5, min_samples_split=5)
 
 # Train the model
 clf.fit(X_train_flattened, y_train)
