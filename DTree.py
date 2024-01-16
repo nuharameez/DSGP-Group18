@@ -5,6 +5,9 @@ import numpy as np
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def load_data_from_folder(data_folder):
@@ -20,7 +23,7 @@ def load_data_from_folder(data_folder):
         for img_file in os.listdir(kl_path):
             img_path = os.path.join(kl_path, img_file)
 
-            # Read the KL grade from the subdirectory name (assuming it's a number)
+            # Read the KL grade from the subdirectory name
             label = int(kl_grade.replace("KL", ""))
 
             x_paths.append(img_path)
@@ -33,7 +36,7 @@ def load_data_from_folder(data_folder):
     for img_path, label in zip(x_paths, y_labels):
         # Read and resize the image
         img = cv2.imread(img_path)
-        img = cv2.resize(img, (128, 128))  # Adjust dimensions as needed
+        img = cv2.resize(img, (224, 224))  # Adjust dimensions as needed
 
         # Preprocess the image (normalize pixel values to [0, 1])
         img = img / 255.0
@@ -75,3 +78,28 @@ print(f"Accuracy: {accuracy:.2f}")
 # Print classification report
 print("Classification Report:")
 print(classification_report(y_test, y_predict, zero_division=1))
+
+# Calculate confusion matrix
+# cm = confusion_matrix(y_test, y_predict)
+#
+# # Plot confusion matrix
+# plt.figure(figsize=(8, 6))
+# sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=np.unique(y_test), yticklabels=np.unique(y_test))
+# plt.xlabel("Predicted")
+# plt.ylabel("True")
+# plt.title("Confusion Matrix")
+# plt.show()
+
+
+# Load and preprocess the input image
+input_image_path = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\train\2\9755634L.png"
+input_img = cv2.imread(input_image_path)
+input_img = cv2.resize(input_img, (224, 224))
+input_img = input_img / 255.0
+
+input_img_flattened = input_img.reshape(1, -1)
+
+prediction = clf.predict(input_img_flattened)
+
+classification_grade = f"KL{prediction[0]}"
+print(f"Classification Grade: {classification_grade}")
