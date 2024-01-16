@@ -62,12 +62,12 @@ model.compile(optimizer=Adam(learning_rate=0.0005),  # Lower learning rate
 batch_size = 16
 
 
-epochs = 20
+epochs = 50
 steps_per_epoch = len(train_generator)
 validation_steps = len(validation_generator)
 
 # Assign higher weights to the normal class
-class_weights = {0: 1.0, 1: 2.0}  # Assuming 0 for normal, 1 for osteoarthritis
+class_weights = {0: 1.0, 1: 6.93}  # Assuming 0 for normal, 1 for osteoarthritis
 
 history = model.fit(
     train_generator,
@@ -80,7 +80,6 @@ history = model.fit(
 
 
 model.save('knee_xray_classifier.h5')
-# Load the model
-new_model = tf.keras.models.load_model('knee_xray_classifier.h5')
+
 
 
