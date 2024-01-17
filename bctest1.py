@@ -35,5 +35,7 @@ for filename in os.listdir(test_images_dir):
         predicted_class = (prediction > 0.5).astype(int)
 
         # Display results
-        class_label = "Normal" if predicted_class[0] == 0 else "Not Normal"
-        print(f"Image: {filename}, Prediction Probability: {prediction[0, 0]}, Predicted Class: {class_label}")
+        if predicted_class[0] == 0:
+            print(f"Image: {filename}, Prediction: Normal")
+        else:
+            print(f"Image: {filename}, Prediction: Osteoarthritis, Probability: {prediction[0, 0]}")
