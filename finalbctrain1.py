@@ -68,12 +68,12 @@ model.add(layers.Conv2D(128, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Flatten())
 model.add(layers.Dense(128, activation='relu'))
-model.add(layers.Dropout(0.5))  # Add dropout layer
+model.add(layers.Dropout(0.3))  # Add dropout layer
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
 # Compile the model with adjusted class weights and learning rate
-model.compile(optimizer=Adam(lr=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(learning_rate=0.00001), loss='binary_crossentropy', metrics=['accuracy'])
 
 # Train the model with increased epochs
 model.fit(datagen.flow(X_train, y_train, batch_size=32), epochs=20,

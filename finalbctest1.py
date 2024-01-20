@@ -5,7 +5,7 @@ from tensorflow.keras.preprocessing.image import img_to_array, load_img
 import os
 
 # Load the saved model
-model_path = 'binary_classification_model_updated.keras'
+model_path = 'binary_classification_model_updated_with_val.keras'
 try:
     model = load_model(model_path)
 except Exception as e:
@@ -22,7 +22,7 @@ def preprocess_image(img_path):
     return img_array
 
 # Test folder path
-test_folder_path = r"C:\Users\multi\Desktop\knee\test"
+test_folder_path = r"C:\Users\multi\Desktop\All Folders\knee\test"
 
 # Loop through images in the folder
 for filename in os.listdir(test_folder_path):

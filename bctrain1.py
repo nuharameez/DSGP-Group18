@@ -3,6 +3,7 @@
 import os
 import cv2
 import numpy as np
+from keras.src.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import layers, models
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
@@ -90,10 +91,13 @@ model.add(layers.Dropout(0.5))
 model.add(layers.Dense(1, activation='sigmoid'))
 
 # Compile the model with adjusted class weights and learning rate
-model.compile(optimizer=Adam(lr=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+
+# Early stopping callback. stops when 3 consecutive losses are the same
+early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
 
 # Train the model with increased epochs and validation data
-history = model.fit(train_datagen.flow(X_train, y_train, batch_size=32), epochs=20,
+history = model.fit(train_datagen.flow(X_train, y_train, batch_size=32), epochs=10,
                     validation_data=val_datagen.flow(val_data, val_labels, batch_size=32),
                     class_weight=class_weight_dict)
 
