@@ -1,6 +1,5 @@
 import cv2
 import os
-
 import numpy as np
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
@@ -9,6 +8,9 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import load_img, img_to_array
+from keras.losses import sparse_categorical_crossentropy
+
+from joblib import dump, load
 
 
 def load_and_preprocess(data_folder):
@@ -52,17 +54,12 @@ def load_and_preprocess(data_folder):
 
 # Specify the paths for training and testing data folders
 train_data_directory = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\train"
-test_data_directory = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\test"
 
 # Load training data
 X_train, y_train = load_and_preprocess(train_data_directory)
 
-# Load testing data
-X_test, y_test = load_and_preprocess(test_data_directory)
-
 # Flatten or reshape the images
 X_train_flattened = X_train.reshape(X_train.shape[0], -1)
-X_test_flattened = X_test.reshape(X_test.shape[0], -1)
 
 # Initialize the decision tree classifier
 clf = DecisionTreeClassifier(random_state=42)
@@ -70,26 +67,8 @@ clf = DecisionTreeClassifier(random_state=42)
 # Train the model
 clf.fit(X_train_flattened, y_train)
 
-# Make predictions on the test set
-y_predict = clf.predict(X_test_flattened)
+# Save the trained model
+model_filename = "decision_tree_model.joblib"
+dump(clf, model_filename)
+print(f"Trained model saved as {model_filename}")
 
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_predict)
-print(f"Accuracy: {accuracy:.2f}")
-
-# Print classification report
-print("Classification Report:")
-print(classification_report(y_test, y_predict, zero_division=1))
-
-# Load and preprocess the input image
-input_image_path = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\train\2\9755634L.png"
-input_img = cv2.imread(input_image_path)
-input_img = cv2.resize(input_img, (224, 224))
-input_img = input_img / 255.0
-
-input_img_flattened = input_img.reshape(1, -1)
-
-prediction = clf.predict(input_img_flattened)
-
-classification_grade = f"KL{prediction[0]}"
-print(f"Classification Grade: {classification_grade}")
