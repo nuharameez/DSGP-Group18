@@ -1,16 +1,9 @@
 import cv2
 import os
 import numpy as np
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import confusion_matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
 from keras.preprocessing.image import load_img, img_to_array
-from keras.losses import sparse_categorical_crossentropy
-
-from joblib import dump, load
+from joblib import dump
 
 
 def load_and_preprocess(data_folder):
@@ -54,21 +47,29 @@ def load_and_preprocess(data_folder):
 
 # Specify the paths for training and testing data folders
 train_data_directory = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\train"
+validate_data_directory = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\val"
 
-# Load training data
+# Load and preprocess training data
 X_train, y_train = load_and_preprocess(train_data_directory)
+
+# Load and preprocess validation data
+X_val, y_val = load_and_preprocess(validate_data_directory)
 
 # Flatten or reshape the images
 X_train_flattened = X_train.reshape(X_train.shape[0], -1)
+X_val_flattened = X_val.reshape(X_val.shape[0], -1)
 
 # Initialize the decision tree classifier
 clf = DecisionTreeClassifier(random_state=42)
 
-# Train the model
+# Train the model on the training set
 clf.fit(X_train_flattened, y_train)
 
+# Evaluate the model on the validation set
+accuracy = clf.score(X_val_flattened, y_val)
+print(f"Validation Accuracy: {accuracy}")
+
 # Save the trained model
-model_filename = "decision_tree_model.joblib"
+model_filename = "decision_tree_model2.joblib"
 dump(clf, model_filename)
 print(f"Trained model saved as {model_filename}")
-

@@ -1,0 +1,94 @@
+import os
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+from sklearn.metrics import accuracy_score, classification_report
+import xgboost as xgb
+from sklearn.preprocessing import LabelEncoder
+from skimage import io, transform
+import joblib
+
+# Set the path to your dataset
+dataset_path = r'C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS'
+
+
+# Function to load and preprocess images
+def load_images(folder_path, label):
+    images = []
+    labels = []
+    for filename in tqdm(os.listdir(folder_path)):
+        if filename.endswith('.png'):
+            img_path = os.path.join(folder_path, filename)
+            img = io.imread(img_path)
+            img = transform.resize(img, (224, 224))  # Resize the image to 224x224
+            images.append(img.flatten())  # Flatten the image array
+            labels.append(label)
+    return np.array(images), np.array(labels)
+
+# Load and preprocess test data
+test_data = []
+test_labels = []
+for kl_grade in range(1, 5):
+    kl_folder_path = os.path.join(dataset_path, 'CustomTest', str(kl_grade))
+    images, labels = load_images(kl_folder_path, kl_grade)
+    test_data.extend(images)
+    test_labels.extend(labels)
+
+# Convert data to numpy arrays
+X_test = np.array(test_data)
+y_test = np.array(test_labels)
+
+# Load the saved model
+model_filename = 'xgboost_model2.joblib'
+loaded_model = joblib.load(model_filename)
+
+# Load the LabelEncoder fitted during training
+label_encoder_filename = 'label_encoder2.joblib'
+label_encoder = joblib.load(label_encoder_filename)
+
+# Ensure that the LabelEncoder has the same classes as used during training
+new_classes = set(label_encoder.classes_) | set(y_test)
+label_encoder.classes_ = np.array(list(new_classes))
+
+# Make predictions on the test set using the loaded model
+y_pred_test = loaded_model.predict(X_test)
+
+# Convert class names to strings
+class_names = list(map(str, label_encoder.classes_))
+
+# Display predictions for each folder
+unique_folders = np.unique(y_test)
+for folder in unique_folders:
+    folder_indices = np.where(y_test == folder)[0]
+    folder_images = X_test[folder_indices]
+    folder_labels = y_test[folder_indices]
+
+    # Make predictions for images in the current folder
+    folder_predictions = loaded_model.predict(folder_images)
+
+    print(f"\nPredictions for Folder {folder}:")
+
+    # Adjust actual labels to match 0-indexed format
+    adjusted_actual_labels = folder_labels - 1
+
+    # Optionally, print some actual and predicted labels for individual samples
+    for i in range(min(20, len(folder_images))):
+        image_path = os.path.join(dataset_path, 'CustomTest', str(folder), f'image_{i + 1}.png')
+
+        try:
+            true_label = int(label_encoder.inverse_transform([folder_labels[i]])[0])
+        except ValueError:
+            true_label = -1  # Handle the case of an unseen label
+
+        predicted_label = int(label_encoder.inverse_transform([folder_predictions[i]])[0])
+        print(
+            f"Actual: {true_label - 1 if true_label != -1 else '4'}, Predicted: {predicted_label}")
+
+# Evaluate overall performance
+encoded_labels_test = label_encoder.transform(y_test)
+y_pred_probabilities = loaded_model.predict_proba(X_test)
+
+# Get the predicted class labels by finding the index with maximum probability
+y_pred_labels = np.argmax(y_pred_probabilities, axis=1)
+
+print(classification_report(encoded_labels_test, y_pred_labels, target_names=class_names))
