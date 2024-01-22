@@ -64,13 +64,13 @@ model = xgb.XGBClassifier(max_depth=6, subsample=0.8, objective='multi:softmax',
 model.fit(X_train, encoded_labels_train)
 
 # Save the trained model to a file
-model_filename = 'xgboost_model2.joblib'
-joblib.dump(model, model_filename)
-print(f"Model saved as '{model_filename}'")
-
-label_encoder_filename = 'label_encoder2.joblib'
-joblib.dump(label_encoder, label_encoder_filename)
-print(f"LabelEncoder saved as '{label_encoder_filename}'")
+# model_filename = 'xgboost_model2.joblib'
+# joblib.dump(model, model_filename)
+# print(f"Model saved as '{model_filename}'")
+#
+# label_encoder_filename = 'label_encoder2.joblib'
+# joblib.dump(label_encoder, label_encoder_filename)
+# print(f"LabelEncoder saved as '{label_encoder_filename}'")
 
 # Make predictions on the validate set
 y_pred_validate = model.predict(X_validate)
