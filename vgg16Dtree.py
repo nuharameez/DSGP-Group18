@@ -155,7 +155,7 @@ model.add(Dense(4, activation='softmax'))  # Assuming 4 classes (KL grades 1-4)
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model
-model.fit(train_features_flat, y_train, epochs=10, batch_size=32, validation_data=(val_features_flat, y_val))
+model.fit(train_features_flat, y_train, epochs=24, batch_size=32, validation_data=(val_features_flat, y_val))
 
 # Evaluate the model on the validation set
 y_pred = np.argmax(model.predict(val_features_flat), axis=1)
