@@ -1,41 +1,39 @@
 import os
-import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array, load_img
+from tensorflow.keras.preprocessing import image
 
-# Function to load and preprocess a single image
-def load_and_preprocess_single_image(image_path):
-    img = load_img(image_path, target_size=(224, 224))
-    img_array = img_to_array(img)
-    img_array = cv2.cvtColor(np.array(img_array, dtype=np.uint8), cv2.COLOR_BGR2RGB)
-    img_array = cv2.resize(img_array, (224, 224))
-    img_array = cv2.GaussianBlur(img_array, (5, 5), 0)
-    return np.expand_dims(img_array, axis=0)  # Add batch dimension
+# Assuming 'knee_model.h5' is in the current working directory
+model_path = 'knee_model1.h5'
 
-# Load the saved VGG16 transfer learning model
-saved_model_path = 'vgg16_transfer_learning_model.keras'
-loaded_model = load_model(saved_model_path)
+# Load the saved model
+loaded_model = load_model(model_path)
 
-# Directory path containing the test images
-test_images_dir = r"C:\Users\multi\Desktop\All Folders\knee\test"
+# Replace this with the path to your test image folder
+test_folder_path = r"C:\Users\multi\Desktop\All Folders\knee\test"
 
-# Iterate through each image in the directory
-for filename in os.listdir(test_images_dir):
-    if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-        image_path = os.path.join(test_images_dir, filename)
+# Mapping for printing
+class_mapping = {0: "normal", 1: "osteo"}
 
-        # Load and preprocess the image
-        new_image = load_and_preprocess_single_image(image_path)
+# Iterate through each image in the folder
+for image_filename in os.listdir(test_folder_path):
+    # Construct the full path to the image
+    image_path = os.path.join(test_folder_path, image_filename)
 
-        # Make predictions
-        prediction = loaded_model.predict(new_image)
+    # Load and preprocess the test image
+    img = image.load_img(image_path, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0) / 255.0  # Rescale pixel values
 
-        # Convert prediction to class label (assuming binary classification)
-        predicted_class = (prediction > 0.5).astype(int)
+    # Predict using the loaded model
+    prediction = loaded_model.predict(img_array)
+    prediction_class = (prediction > 0.5).astype(int)
 
-        # Display results
-        if predicted_class[0] == 0:
-            print(f"Image: {filename}, Prediction: Normal")
-        else:
-            print(f"Image: {filename}, Prediction: Osteoarthritis, Probability: {prediction[0, 0]}")
+    # Convert the prediction_class array to a scalar (integer)
+    prediction_class_scalar = prediction_class.item()
+
+    # Map predictions to class names
+    prediction_class_name = class_mapping[prediction_class_scalar]
+
+    # Print the result
+    print(f"Image: {image_filename}, Prediction: {prediction_class_name}")
