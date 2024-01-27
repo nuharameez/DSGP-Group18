@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import joblib  # Import joblib for saving the model
 
 # Load your dataset
-df = pd.read_csv('Treatement dataset1.csv')  # Replace 'your_dataset.csv' with the actual file path of your dataset
+df = pd.read_csv('Treatement dataset1.csv')
 
 # Convert categorical variables to one-hot encoding
 df_encoded = pd.get_dummies(df, columns=['Treatment Recommendation'], prefix='', prefix_sep='')
@@ -24,6 +24,15 @@ rf_model = RandomForestClassifier(n_estimators=100, random_state=42, class_weigh
 # Train the model
 rf_model.fit(X_train, y_train)
 
+# Calculate accuracy on the training set
+y_train_pred = rf_model.predict(X_train)
+train_accuracy = accuracy_score(y_train, y_train_pred)
+print(f"Training Accuracy: {train_accuracy:.2f}")
+
+# Classification Report for training set
+classification_report_train = classification_report(y_train, y_train_pred, zero_division=1)
+print("Classification Report (Training Set):\n", classification_report_train)
+
 # Save the trained model to a file
 model_filename = 'random_forest_model.joblib'
 joblib.dump(rf_model, model_filename)
@@ -32,13 +41,15 @@ print(f"Trained Random Forest model saved as {model_filename}")
 # Make predictions on the test set
 y_pred = rf_model.predict(X_test)
 
+# Calculate accuracy on the testing set
+test_accuracy = accuracy_score(y_test, y_pred)
+print(f"Testing Accuracy: {test_accuracy:.2f}")
+
 # Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-classification_report_output = classification_report(y_test, y_pred, zero_division=1)  # Adjust the parameter as needed
+classification_report_output = classification_report(y_test, y_pred, zero_division=1)
 
 # Print the results
-print(f"Accuracy: {accuracy:.2f}")
-print("Classification Report:\n", classification_report_output)
+print("Classification Report (Testing Set):\n", classification_report_output)
 
 
 # Function to recommend treatments for a specific grade
@@ -59,3 +70,4 @@ user_grade = input("Enter the grade for treatment recommendations (e.g., 0, 1, 2
 
 # Recommend treatments for the user-specified grade
 recommend_treatments_for_grade(user_grade)
+
