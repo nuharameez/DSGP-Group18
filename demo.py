@@ -308,3 +308,4 @@ class_names = list(map(str, label_encoder.classes_))
 
 # Print classification report
 print(classification_report(encoded_labels_validate, y_pred_validate, target_names=class_names))
+
