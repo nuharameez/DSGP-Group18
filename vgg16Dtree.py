@@ -315,5 +315,3 @@ joblib.dump(label_encoder, 'label_encoder_VGG16KFold.joblib')
 # print(f"\nOverall Accuracy: {overall_accuracy:.2f}%")
 
 
-# Function to preprocess a single image and make predictions
-
