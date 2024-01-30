@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-print("this is a demo file")
-print("Image identification")
-=======
 import os
 from keras.models import load_model
 from keras.preprocessing import image
@@ -62,4 +58,3 @@ test_generator = test_datagen.flow_from_directory(
 test_loss, test_acc = model.evaluate(test_generator, verbose=2)
 print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
 """""
->>>>>>> Stashed changes
