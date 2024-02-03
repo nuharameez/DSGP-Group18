@@ -7,7 +7,7 @@ from keras.models import load_model
 base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 # Load the trained model
-model = load_model('VGG16KFold.h5')
+model = load_model('VGG16KFold3.h5')
 
 
 # Function to preprocess a single image and make predictions
@@ -28,6 +28,6 @@ def predict_grade(image_path):
 
 
 # Example usage:
-image_path = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\test\1\9302340L.png"
+image_path = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\test\3\9832481L.png"
 predicted_grade = predict_grade(image_path)
 print(f"Predicted Grade: {predicted_grade}")

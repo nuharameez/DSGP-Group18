@@ -171,141 +171,212 @@
 # # Print classification report
 # print(classification_report(encoded_labels_validate, y_pred_validate, target_names=class_names))
 
+# import os
+# import numpy as np
+# import cv2
+# from skimage import io
+# from tqdm import tqdm
+# from sklearn.preprocessing import LabelEncoder
+# from sklearn.metrics import accuracy_score, classification_report
+# # from sklearn.externals import joblib
+# from keras.applications.vgg16 import VGG16, preprocess_input
+# from keras.models import Model
+# from skimage.transform import resize
+# import xgboost as xgb
+#
+# # Function for making all images square
+# def square(img):
+#     diff = img.shape[0] - img.shape[1]
+#     if diff % 2 == 0:
+#         pad1 = int(np.floor(np.abs(diff) / 2))
+#         pad2 = int(np.floor(np.abs(diff) / 2))
+#     else:
+#         pad1 = int(np.floor(np.abs(diff) / 2))
+#         pad2 = int(np.floor(np.abs(diff) / 2)) + 1
+#
+#     if diff == 0:
+#         return img
+#     elif diff > 0:
+#         return np.pad(img, [(0, 0), (pad1, pad2)], 'constant', constant_values=(0))
+#     elif diff < 0:
+#         return np.pad(img, [(pad1, pad2), (0, 0)], 'constant', constant_values=(0))
+#
+#
+# def preprocess(img):
+#     blurred_image = cv2.GaussianBlur(img, (5, 5), 0)
+#
+#     # Example: Histogram equalization for contrast enhancement
+#     equalized_image = cv2.equalizeHist(blurred_image)
+#
+#     # Thresholding
+#     _, thresholded_image = cv2.threshold(equalized_image, 150, 255, cv2.THRESH_BINARY)
+#
+#     return thresholded_image
+#
+# # Function for resizing and cropping
+# def resize_crop(img):
+#     img = resize(img, (224, 224))
+#
+#     # If the image is grayscale, convert it to a 3-channel image
+#     if img.ndim == 2:
+#         img = np.stack((img,) * 3, axis=-1)
+#
+#     return img
+# # Function to load and preprocess images
+# def load_images_with_vgg16(folder_path, label, model):
+#     images = []
+#     labels = []
+#     for filename in tqdm(os.listdir(folder_path)):
+#         if filename.endswith('.png'):
+#             img_path = os.path.join(folder_path, filename)
+#             img = io.imread(img_path)
+#             # img = square(img)
+#             # img = preprocess(img)
+#             img = resize_crop(img)
+#             #
+#             # Preprocess input for VGG16
+#             img = preprocess_input(img.reshape(1, 224, 224, 3))
+#
+#             # Extract features using VGG16
+#             features = model.predict(img)
+#
+#             images.append(features.flatten())
+#             labels.append(label)
+#
+#     return np.array(images), np.array(labels)
+#
+# # Load VGG16 model
+# base_model = VGG16(weights='imagenet')
+# model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
+#
+# # Set the path to your dataset
+# dataset_path = r'C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS'
+#
+# # Load and preprocess train data
+# train_data = []
+# train_labels = []
+# for kl_grade in range(1, 5):
+#     kl_folder_path = os.path.join(dataset_path, 'CustomTrain', str(kl_grade))
+#     images, labels = load_images_with_vgg16(kl_folder_path, kl_grade, model)
+#     train_data.extend(images)
+#     train_labels.extend(labels)
+#
+# # Load and preprocess validate data
+# validate_data = []
+# validate_labels = []
+# for kl_grade in range(1, 5):
+#     kl_folder_path = os.path.join(dataset_path, 'CustomVal', str(kl_grade))
+#     images, labels = load_images_with_vgg16(kl_folder_path, kl_grade, model)
+#     validate_data.extend(images)
+#     validate_labels.extend(labels)
+#
+# # Convert data to numpy arrays
+# X_train = np.array(train_data)
+# y_train = np.array(train_labels)
+# X_validate = np.array(validate_data)
+# y_validate = np.array(validate_labels)
+#
+# # Convert labels to numerical values
+# label_encoder = LabelEncoder()
+# encoded_labels_train = label_encoder.fit_transform(y_train)
+# encoded_labels_validate = label_encoder.transform(y_validate)
+#
+# # Create an XGBoost model
+# model = xgb.XGBClassifier(max_depth=8, subsample=0.8, objective='multi:softmax', num_class=len(np.unique(encoded_labels_train)))
+#
+# # Train the model
+# model.fit(X_train, encoded_labels_train)
+#
+# # Save the trained model to a file
+# # model_filename = 'xgboost_model3.joblib'
+# # joblib.dump(model, model_filename)
+# # print(f"Model saved as '{model_filename}'")
+# #
+# # label_encoder_filename = 'label_encoder3.joblib'
+# # joblib.dump(label_encoder, label_encoder_filename)
+# # print(f"LabelEncoder saved as '{label_encoder_filename}'")
+#
+# # Make predictions on the validate set
+# y_pred_validate = model.predict(X_validate)
+#
+# # Evaluate the model on validate set
+# accuracy_validate = accuracy_score(encoded_labels_validate, y_pred_validate)
+# print(f'Validation Accuracy: {accuracy_validate}')
+#
+# # Convert class names to strings
+# class_names = list(map(str, label_encoder.classes_))
+#
+# # Print classification report
+# print(classification_report(encoded_labels_validate, y_pred_validate, target_names=class_names))
+
 import os
-import numpy as np
 import cv2
-from skimage import io
-from tqdm import tqdm
+import numpy as np
+from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, classification_report
-# from sklearn.externals import joblib
-from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.models import Model
-from skimage.transform import resize
-import xgboost as xgb
 
-# Function for making all images square
-def square(img):
-    diff = img.shape[0] - img.shape[1]
-    if diff % 2 == 0:
-        pad1 = int(np.floor(np.abs(diff) / 2))
-        pad2 = int(np.floor(np.abs(diff) / 2))
-    else:
-        pad1 = int(np.floor(np.abs(diff) / 2))
-        pad2 = int(np.floor(np.abs(diff) / 2)) + 1
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
-    if diff == 0:
-        return img
-    elif diff > 0:
-        return np.pad(img, [(0, 0), (pad1, pad2)], 'constant', constant_values=(0))
-    elif diff < 0:
-        return np.pad(img, [(pad1, pad2), (0, 0)], 'constant', constant_values=(0))
-
-
-def preprocess(img):
-    blurred_image = cv2.GaussianBlur(img, (5, 5), 0)
-
-    # Example: Histogram equalization for contrast enhancement
-    equalized_image = cv2.equalizeHist(blurred_image)
-
-    # Thresholding
-    _, thresholded_image = cv2.threshold(equalized_image, 150, 255, cv2.THRESH_BINARY)
-
-    return thresholded_image
-
-# Function for resizing and cropping
-def resize_crop(img):
-    img = resize(img, (224, 224))
-
-    # If the image is grayscale, convert it to a 3-channel image
-    if img.ndim == 2:
-        img = np.stack((img,) * 3, axis=-1)
-
-    return img
 # Function to load and preprocess images
-def load_images_with_vgg16(folder_path, label, model):
+def load_and_preprocess_data(folder_path):
     images = []
     labels = []
-    for filename in tqdm(os.listdir(folder_path)):
-        if filename.endswith('.png'):
-            img_path = os.path.join(folder_path, filename)
-            img = io.imread(img_path)
-            # img = square(img)
-            # img = preprocess(img)
-            img = resize_crop(img)
-            #
-            # Preprocess input for VGG16
-            img = preprocess_input(img.reshape(1, 224, 224, 3))
 
-            # Extract features using VGG16
-            features = model.predict(img)
+    for label in os.listdir(folder_path):
+        label_path = os.path.join(folder_path, label)
 
-            images.append(features.flatten())
+        for file_name in os.listdir(label_path):
+            img_path = os.path.join(label_path, file_name)
+            img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+            img = cv2.resize(img, (224, 224))
+            images.append(img)
             labels.append(label)
 
     return np.array(images), np.array(labels)
 
-# Load VGG16 model
-base_model = VGG16(weights='imagenet')
-model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
-
-# Set the path to your dataset
-dataset_path = r'C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS'
-
-# Load and preprocess train data
-train_data = []
-train_labels = []
-for kl_grade in range(1, 5):
-    kl_folder_path = os.path.join(dataset_path, 'CustomTrain', str(kl_grade))
-    images, labels = load_images_with_vgg16(kl_folder_path, kl_grade, model)
-    train_data.extend(images)
-    train_labels.extend(labels)
-
-# Load and preprocess validate data
-validate_data = []
-validate_labels = []
-for kl_grade in range(1, 5):
-    kl_folder_path = os.path.join(dataset_path, 'CustomVal', str(kl_grade))
-    images, labels = load_images_with_vgg16(kl_folder_path, kl_grade, model)
-    validate_data.extend(images)
-    validate_labels.extend(labels)
-
-# Convert data to numpy arrays
-X_train = np.array(train_data)
-y_train = np.array(train_labels)
-X_validate = np.array(validate_data)
-y_validate = np.array(validate_labels)
+# Load and preprocess data
+data_path = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\CustomTrain"
+X, y = load_and_preprocess_data(data_path)
 
 # Convert labels to numerical values
 label_encoder = LabelEncoder()
-encoded_labels_train = label_encoder.fit_transform(y_train)
-encoded_labels_validate = label_encoder.transform(y_validate)
+y = label_encoder.fit_transform(y)
 
-# Create an XGBoost model
-model = xgb.XGBClassifier(max_depth=8, subsample=0.8, objective='multi:softmax', num_class=len(np.unique(encoded_labels_train)))
+# Flatten the images
+X_flat = X.reshape(X.shape[0], -1)
 
-# Train the model
-model.fit(X_train, encoded_labels_train)
+# Define K-fold cross-validation
+kfold = StratifiedKFold(n_splits=4, shuffle=True, random_state=42)
 
-# Save the trained model to a file
-# model_filename = 'xgboost_model3.joblib'
-# joblib.dump(model, model_filename)
-# print(f"Model saved as '{model_filename}'")
-#
-# label_encoder_filename = 'label_encoder3.joblib'
-# joblib.dump(label_encoder, label_encoder_filename)
-# print(f"LabelEncoder saved as '{label_encoder_filename}'")
+# Initialize variables to store performance metrics
+accuracy_scores = []
 
-# Make predictions on the validate set
-y_pred_validate = model.predict(X_validate)
+# Initialize variables to store classification reports
+classification_reports = []
 
-# Evaluate the model on validate set
-accuracy_validate = accuracy_score(encoded_labels_validate, y_pred_validate)
-print(f'Validation Accuracy: {accuracy_validate}')
+# Iterate over K folds
+for train_index, val_index in kfold.split(X_flat, y):
+    X_train, X_val = X_flat[train_index], X_flat[val_index]
+    y_train, y_val = y[train_index], y[val_index]
 
-# Convert class names to strings
-class_names = list(map(str, label_encoder.classes_))
+    # Build and train the decision tree model
+    decision_tree_model = DecisionTreeClassifier(random_state=42)
+    decision_tree_model.fit(X_train, y_train)
 
-# Print classification report
-print(classification_report(encoded_labels_validate, y_pred_validate, target_names=class_names))
+    # Evaluate the model on the validation set
+    y_pred = decision_tree_model.predict(X_val)
+    accuracy = accuracy_score(y_val, y_pred)
+    accuracy_scores.append(accuracy)
 
+    # Calculate classification report
+    class_report = classification_report(y_val, y_pred, target_names=label_encoder.classes_)
+    classification_reports.append(class_report)
+
+# Print average accuracy across all folds
+print("Average Validation Accuracy:", np.mean(accuracy_scores))
+
+# Print classification reports for each fold
+for i, report in enumerate(classification_reports):
+    print(f"\nClassification Report - Fold {i+1}:\n{report}")

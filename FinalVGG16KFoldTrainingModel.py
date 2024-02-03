@@ -32,7 +32,7 @@ def load_and_preprocess_data(folder_path):
 
 
 # Load and preprocess data
-data_path = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\CustomTrain"
+data_path = r"C:\Users\MSI\Downloads\IIT STUFF\CM 2603 DS\CW implementation testing\DATASETS\train"
 X, y = load_and_preprocess_data(data_path)
 
 # Convert labels to numerical values
@@ -75,7 +75,7 @@ for train_index, val_index in kfold.split(features_flat, y):
     y_train, y_val = y[train_index], y[val_index]
 
     # Train the model
-    model.fit(X_train, y_train, epochs=40, batch_size=32, validation_data=(X_val, y_val))
+    model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_val, y_val))
 
     # Evaluate the model on the validation set
     y_pred = np.argmax(model.predict(X_val), axis=1)
@@ -94,7 +94,7 @@ for i, report in enumerate(classification_reports):
     print(f"\nClassification Report - Fold {i+1}:\n{report}")
 
 # Save the trained model
-# model.save('VGG16KFold.h5')
+# model.save('VGG16KFold2.h5')
 
 # Save the label encoder
-# joblib.dump(label_encoder, 'label_encoder_VGG16KFold.joblib')
+# joblib.dump(label_encoder, 'label_encoder_VGG16KFold2.joblib')
