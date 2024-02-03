@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.metrics import confusion_matrix, classification_report
-import matplotlib.pyplot as plt
 import numpy as np
 
 # Define paths
@@ -85,7 +84,7 @@ print("Confusion Matrix - Validate Data:")
 print(validate_cm)
 
 # Classification Report
-train_class_report = classification_report(train_labels, train_predictions, target_names=["normal", "abnormal"])
+#train_class_report = classification_report(train_labels, train_predictions, target_names=["normal", "abnormal"])
 validate_class_report = classification_report(validate_labels, validate_predictions, target_names=["normal", "abnormal"])
 
 
