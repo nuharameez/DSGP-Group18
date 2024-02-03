@@ -1,0 +1,198 @@
+Level,Treatment Recommendation
+Grade 0,Regular Exercises
+Grade 0,Proper lifting techniques
+Grade 0,Healthy Postures
+Grade 0,Avoid Prolonged Sitting
+Grade 0,Balanced Diet
+Grade 0,Adequate hydration
+Grade 0,Maintain healthy weight
+Grade 0,Joint friendly exercises
+Grade 0,Calcium and vitamin D supplements
+Grade 0,Omega 3 fatty acids
+Grade 0,Avoid smoking and Excessive alcohol
+Grade 0,Protein-rich diet
+Grade 0,Sun exposure
+Grade 0,Regular health checkups
+Grade 0,Joint flexibility exercises
+Grade 0,Maintain healthy cholesterol levels
+Grade 0,Proper Footwear
+Grade 1,Mind-Body techniques
+Grade 1,Aquatic Exercise
+Grade 1,Balanced Diet
+Grade 1,Low-Intensity exercises
+Grade 1,Joint supplements
+Grade 1,Meditation
+Grade 1,Swimming
+Grade 1,Stationary cycling
+Grade 1,Heat therapy
+Grade 1,Cold therapy
+Grade 1,Hydrotherapy
+Grade 1,Warm baths
+Grade 1,Music Therapy
+Grade 1,Acupuncture
+Grade 1,Cognitive-behavioral therapy
+Grade 1,Balneotherapy
+Grade 1,Deep breathing exercises
+Grade 1,Low-Allergen diet
+Grade 1,Anti-Inflammatory diet
+Grade 1,Gluten-free diet
+Grade 1,Herbal supplements
+Grade 1,Physical therapy (Extended)
+Grade 1,Functional electrical stimulation
+Grade 1,Tele-rehabilitation
+Grade 1,Joint mobilization exercises
+Grade 1,Adaptive equipment assessments
+Grade 1,Social support and counseling
+Grade 1,Assistive technology for communication
+Grade 1,Group therapy sessions
+Grade 1,Art and music therapy
+Grade 1,Recreational therapy
+Grade 1,Adaptive gardening techniques
+Grade 1,Animal-assisted therapy
+Grade 1,Massage therapy
+Grade 1,Aromatherapy
+Grade 1,Use of orthopedic braces
+Grade 1,Self-management programs
+Grade 1,Guided imagery
+Grade 1,Chiropractic care
+Grade 1,Use of mobility aids
+Grade 1,Low-impact aerobic exercises
+Grade 1,Wheelchair-accessible exercises
+Grade 1,Hypnotherapy
+Grade 1,Assistive devices for vision impairment
+Grade 1,Hydrotherapy pools
+Grade 1,Stem cell therapy
+Grade 1,Platelet-rich plasma (PRP) therapy
+Grade 1,Topical analgesics
+Grade 1,Traction therapy
+Grade 1,Electromagnetic field therapy
+Grade 1,Laser therapy
+Grade 1,Occupational therapy
+Grade 1,Autogenic training
+Grade 1,Wheelchair Tai Chi
+Grade 1,Electroacupuncture
+Grade 1,Ayurvedic treatments
+Grade 1,Prolotherapy
+Grade 1,Neural mobilization exercises
+Grade 1,Mindfulness meditation
+Grade 1,Kinesiology taping
+Grade 1,Traditional Chinese Medicine (TCM) interventions
+Grade 1,Energy healing techniques
+Grade 1,Holistic health approaches
+Grade 1,Guided visualization exercises
+Grade 1,Functional medicine interventions
+Grade 1,Herbal compress therapy
+Grade 1,Infrared sauna therapy
+Grade 1,Acupressure
+Grade 1,Posture alignment therapy
+Grade 1,Deep tissue massage
+Grade 1,Joint injections
+Grade 1,Physical therapy modalities
+Grade 1,Hormone replacement therapy
+Grade 1,Joint fusion surgery
+Grade 1,Ozone therapy
+Grade 1,Shockwave therapy
+Grade 1,Biofeedback
+Grade 1,Feldenkrais method
+Grade 1,Hypobaric chamber therapy
+Grade 1,PRP injections
+Grade 1,Knee arthroscopy
+Grade 1,Viscosupplementation injections
+Grade 1,Knee replacement surgery
+Grade 1,Partial knee replacement surgery
+Grade 1,Osteotomy
+Grade 1,Joint denervation
+Grade 1,Knee osteotomy
+Grade 1,Joint revision surgery
+Grade 1,Arthroplasty
+Grade 1,Deep Breathing Exercises
+Grade 1,Low-Allergen Diet
+Grade 1,Anti-Inflammatory Diet
+Grade 1,Gluten-Free Diet
+Grade 1,Herbal Supplements
+Grade 1,Physical Therapy
+Grade 1,Functional Electrical Stimulation
+Grade 1,Tele-Rehabilitation
+Grade 1,Joint Mobilization Exercises
+Grade 1,Adaptive Equipment Assessments
+Grade 1,Social Support and Counseling
+Grade 1,Assistive Technology for Communication
+Grade 1,Group Therapy Sessions
+Grade 1,Art and Music Therapy
+Grade 1,Recreational Therapy
+Grade 1,Enjoying nature walks
+Grade 1,Creating a positive home environment
+Grade 1,Massage chair sessions
+Grade 1,Socializing with friends and family
+Grade 1,Participate in community events
+Grade 1,Chair exercises for mobility
+Grade 1,Outdoor mindfulness meditation
+Grade 1,Exploring new hobbies
+Grade 1,Proper ergonomics for computer use
+Grade 1,Volunteer work for mental well-being
+Grade 1,Deep water aerobics
+Grade 1,Self-massage techniques
+Grade 2,Heat and cold therapy
+Grade 2,Use Assistive devices
+Grade 2,Orthopedic shoes
+Grade 2,Elevating legs
+Grade 2,Pain relief
+Grade 2,Weight management
+Grade 2,Low-fat diet
+Grade 2,Resistance Training
+Grade 2,Cycling
+Grade 2,Nutritional counseling
+Grade 2,Leg strengthening exercises
+Grade 2,Joint protection techniques
+Grade 2,Yoga
+Grade 2,Pilates
+Grade 2,Trans cutaneous Electrical Nerve Stimulation
+Grade 2,Tai Chi
+Grade 2,Body mechanics Training
+Grade 2,Walking Aids
+Grade 2,Balanced Exercises
+Grade 2,Whole Grains Diet
+Grade 2,Functional fitness programs
+Grade 2,Joint-friendly footwear
+Grade 2,Proper sleeping positions
+Grade 2,Inversion therapy
+Grade 3,Low-carbohydrate diets
+Grade 3,Physical Therapy exercises
+Grade 3,Reduce weight
+Grade 3,Use Braces and supports
+Grade 3,Consume Joint-friendly supplements
+Grade 3,Occupational therapy
+Grade 3,Isometric exercises
+Grade 3,Custom orthotics
+Grade 3,Water Aerobics
+Grade 3,Electric muscle stimulation
+Grade 3,Posture correction exercises
+Grade 3,Vitamin and mineral supplements
+Grade 3,Cycling with low resistance
+Grade 3,Manual therapy
+Grade 3,Dynamic strength training
+Grade 3,Joint mobilization exercises
+Grade 3,Ergonomic Assessments
+Grade 3,Whole body vibration therapy
+Grade 3,Soft tissue massage
+Grade 3,Hiking on gentle terrain
+Grade 3,Cupping therapy
+Grade 4,Use assistive devices
+Grade 4,Use Joint protection techniques
+Grade 4,Pacing activities
+Grade 4,Adaptive yoga
+Grade 4,Functional electrical stimulation
+Grade 4,Home exercise programs
+Grade 4,Continuous passive motion
+Grade 4,Assistive beds
+Grade 4,Assistive devices for daily living
+Grade 4,Rehabilitation robotics
+Grade 4,Motion Analysis
+Grade 4,Telemedicine for remote monitoring
+Grade 4,Customized wheelchair seating
+Grade 4,Gait training
+Grade 4,Functional capacity evaluation
+Grade 4,Pneumatic compression therapy
+Grade 4,Assistive technology assessments
+Grade 4,Bioelectric therapy
+Grade 4,Intramuscular Stimulation
