@@ -1,13 +1,10 @@
-# server.py
 from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS  # Import CORS
 import os
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
-CORS(app)  # Enable CORS
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -19,7 +16,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Load your pre-trained model here
 # Example: InceptionV3 model
-model_path = r"C:\Users\multi\demo1\backend\knee_model1.h5"
+model_path = r"C:\Users\multi\PycharmProjects\DSGP-Group18\knee_model1.h5"
 loaded_model = load_model(model_path)
 
 def preprocess_image(file_path):
@@ -27,6 +24,14 @@ def preprocess_image(file_path):
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0) / 255.0  # Normalize pixel values
     return img_array
+
+# Enable CORS for all routes
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 @app.route('/analyze', methods=['POST'])
 def analyze_image():
