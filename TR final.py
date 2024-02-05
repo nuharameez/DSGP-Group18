@@ -78,6 +78,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 import joblib  # Import joblib for saving the model
 
+
 # Load your dataset
 df = pd.read_csv('Treatement dataset1.csv')
 
