@@ -1,38 +1,54 @@
-.App {
+.app-container {
   text-align: center;
+  padding: 20px; /* Add padding for better visual appeal */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+h1 {
+  color: #f8e4cc; /* Dark purple text color */
+  margin-bottom: 20px;
+  font-size: 2.5em;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3); /* Text shadow for a subtle effect */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+  background-color: #4c4c4c; /* Dark gray background color */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  font-family: 'Arial', sans-serif; /* Choose an appropriate font-family */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.content-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-around;
+  margin-top: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.left-container {
+  width: 40%;
+  padding: 20px;
+  background-color: #f8e4cc; /* Light green background color */
+  border-radius: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.right-container {
+  width: 40%;
+  padding: 20px;
+  background-color: #f8e4cc; /* Light purple background color */
+  border-radius: 10px;
+}
+
+.result-item {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
 }
