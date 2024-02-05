@@ -54,7 +54,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load the saved model
-loaded_model = load_model('knee_bone_identifier.h5')
+loaded_model = load_model(r"C:\Users\chanu\DSGP-Group18\knee_bone_identifier.h5")
 
 @app.route('/predict', methods=['POST'])
 def predict():
