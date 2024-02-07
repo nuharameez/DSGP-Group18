@@ -52,3 +52,19 @@ input {
   padding: 8px;
   box-sizing: border-box;
 }
+.not-knee-bone {
+  color: red;
+}
+
+.knee-bone-verified {
+  color: green;
+}
+.abnormal-result {
+  color: red;
+}
+
+.normal-result {
+  color: green;
+}
+
+

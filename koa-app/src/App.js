@@ -58,15 +58,15 @@ const App = () => {
         <div className="right-container">
           <h2>Results</h2>
           <div className="result-item">
-            <div className={`result-box ${kneeBone === 'Bone' ? 'normal-result' : 'abnormal-result'}`}>
+            <div className="result-box">
               <p>Knee Bone or Not:</p>
-              <p>{kneeBone}</p>
+              <p className={kneeBone === 'Knee Bone Verified' ? 'knee-bone-verified' : (kneeBone === 'Not a Knee Bone' ? 'not-knee-bone' : '')}>{kneeBone}</p>
             </div>
           </div>
           <div className="result-item">
-            <div className={`result-box ${normalOrNot === 'Normal' ? 'normal-result' : 'abnormal-result'}`}>
+            <div className="result-box">
               <p>Normal or Not:</p>
-              <p>{normalOrNot}</p>
+              <p className={normalOrNot === 'Abnormal' ? 'abnormal-result' : 'normal-result'}>{normalOrNot}</p>
             </div>
           </div>
         </div>
