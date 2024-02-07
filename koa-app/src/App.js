@@ -5,12 +5,9 @@ import axios from 'axios';
 const App = () => {
   const [qrCode, setQrCode] = useState('');
   const [kneeBone, setKneeBone] = useState('');
-  const [diseaseKnee, setDiseaseKnee] = useState('');
-  const [klGrading, setKlGrading] = useState('');
-  const [treatmentRecommendation, setTreatmentRecommendation] = useState('');
+  const [normalOrNot, setNormalOrNot] = useState('');
 
   const [selectedFile, setSelectedFile] = useState(null);
-  const [result, setResult] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -32,20 +29,17 @@ const App = () => {
 
     axios.post('http://localhost:5000/analyze', formData)
       .then(response => {
-        const analysisResult = response.data.result;
+        const analysisResult = response.data;
 
         // Update state based on the analysis result
-        setDiseaseKnee(analysisResult);
-
-        // Optionally, you can set other state variables based on the result
-        // For example, setKlGrading, setTreatmentRecommendation, etc.
-
-        setResult(analysisResult);
+        setKneeBone(analysisResult.knee_bone_result);
+        setNormalOrNot(analysisResult.normal_result);
       })
       .catch(error => {
         console.error('Error analyzing image:', error);
       });
   };
+
 
   return (
     <div className="app-container">
@@ -64,27 +58,15 @@ const App = () => {
         <div className="right-container">
           <h2>Results</h2>
           <div className="result-item">
-            <div className={`result-box ${kneeBone === 'Normal' ? 'normal-result' : 'abnormal-result'}`}>
+            <div className={`result-box ${kneeBone === 'Bone' ? 'normal-result' : 'abnormal-result'}`}>
               <p>Knee Bone or Not:</p>
               <p>{kneeBone}</p>
             </div>
           </div>
           <div className="result-item">
-            <div className={`result-box ${diseaseKnee === 'Normal' ? 'normal-result' : 'abnormal-result'}`}>
-              <p>Disease Knee or Not:</p>
-              <p>{diseaseKnee}</p>
-            </div>
-          </div>
-          <div className="result-item">
-            <div className={`result-box ${klGrading === 'Normal' ? 'normal-result' : 'abnormal-result'}`}>
-              <p>KL Grading:</p>
-              <p>{klGrading}</p>
-            </div>
-          </div>
-          <div className="result-item">
-            <div className={`result-box ${treatmentRecommendation === 'Normal' ? 'normal-result' : 'abnormal-result'}`}>
-              <p>Treatment Recommendation:</p>
-              <p>{treatmentRecommendation}</p>
+            <div className={`result-box ${normalOrNot === 'Normal' ? 'normal-result' : 'abnormal-result'}`}>
+              <p>Normal or Not:</p>
+              <p>{normalOrNot}</p>
             </div>
           </div>
         </div>

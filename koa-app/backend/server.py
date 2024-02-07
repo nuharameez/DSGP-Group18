@@ -14,10 +14,13 @@ def allowed_file(filename):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Load your pre-trained model here
-# Example: InceptionV3 model
-model_path = r"C:\Users\multi\PycharmProjects\DSGP-Group18\knee_model1.h5"
-loaded_model = load_model(model_path)
+# Load knee model
+knee_model_path = 'knee_model1.h5'
+knee_model = load_model(knee_model_path)
+
+# Load knee bone identifier model
+knee_bone_model_path = 'knee_bone_identifier.h5'
+knee_bone_model = load_model(knee_bone_model_path)
 
 def preprocess_image(file_path):
     img = image.load_img(file_path, target_size=(224, 224))
@@ -25,7 +28,6 @@ def preprocess_image(file_path):
     img_array = np.expand_dims(img_array, axis=0) / 255.0  # Normalize pixel values
     return img_array
 
-# Enable CORS for all routes
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -48,19 +50,34 @@ def analyze_image():
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filename)
 
-        # Load and preprocess the image for the model
+        # Load and preprocess the image for the knee model
         img_array = preprocess_image(filename)
 
-        # Perform model inference
-        prediction = loaded_model.predict(img_array)
+        # Perform knee model inference
+        knee_prediction = knee_model.predict(img_array)
 
-        # Map the prediction to 'Normal' or 'Abnormal'
-        prediction_class = (prediction > 0.5).astype(int).item()
-        result = 'Normal' if prediction_class == 0 else 'Abnormal'
+        # Map the knee prediction to 'Normal' or 'Abnormal'
+        knee_result = 'Normal' if knee_prediction < 0.5 else 'Abnormal'
 
-        return jsonify({'result': result})
+        # Perform model inference for the knee bone model
+        knee_bone_prediction = knee_bone_model.predict(img_array)
+
+        # Map the knee bone prediction to 'Bone' or 'Not Bone'
+        knee_bone_result = 'Not Bone' if knee_bone_prediction < 0.5 else 'Bone'
+
+        # Determine normal result based on knee prediction
+        normal_result = 'Normal' if knee_result == 'Normal' else 'Not Normal'
+
+        # Print knee and normal results for debugging
+        print("Knee Result:", knee_bone_result)  # Updated to print knee bone result
+        print("Normal Result:", normal_result)
+
+        return jsonify({'knee_result': knee_result, 'normal_result': normal_result, 'knee_bone_result': knee_bone_result})
     else:
         return jsonify({'error': 'File type not allowed'})
+
+
+
 
 @app.route('/')
 def index():
