@@ -1,64 +1,89 @@
+/* App Container */
 .app-container {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 20px;
+}
+
+/* App Title */
+.app-title {
   text-align: center;
-  padding: 20px; /* Add padding for better visual appeal */
 }
 
-
-h1 {
-  color: #f8e4cc; /* Dark purple text color */
-  margin-bottom: 20px;
-  font-size: 2.5em;
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3); /* Text shadow for a subtle effect */
-}
-
-body {
-  background-color: #4c4c4c; /* Dark gray background color */
-  margin: 0; /* Remove default margin */
-  padding: 0; /* Remove default padding */
-  font-family: 'Arial', sans-serif; /* Choose an appropriate font-family */
-}
-
+/* Content Container */
 .content-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Input Container */
+.input-container {
+  width: 45%;
+}
+
+.input-container h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.qr-code {
+  margin-top: 5px;
+}
+
+/* Result Container */
+.result-container {
+  width: 50%;
+  padding-left: 20px;
+}
+
+.uploading-message,
+.analyzing-message {
+  text-align: center;
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Uploaded Image Container */
+.uploaded-image-container {
   margin-top: 20px;
 }
 
-.left-container {
-  width: 40%;
-  padding: 20px;
-  background-color: #f8e4cc; /* Light green background color */
-  border-radius: 10px;
+.image-title {
+  font-size: 1.2rem;
 }
 
-.right-container {
-  width: 40%;
-  padding: 20px;
-  background-color: #f8e4cc; /* Light purple background color */
-  border-radius: 10px;
+.uploaded-image img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
 }
 
-.result-item {
+/* Result Box */
+.result-box {
+  border: 2px solid #000;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.result-title {
+  font-size: 1.5rem;
   margin-bottom: 15px;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-.not-knee-bone {
-  color: red;
+.result-item {
+  margin-bottom: 10px;
 }
 
 .knee-bone-verified {
   color: green;
 }
+
+.not-knee-bone {
+  color: red;
+}
+
 .abnormal-result {
   color: red;
 }
@@ -66,5 +91,7 @@ input {
 .normal-result {
   color: green;
 }
-
-
+.not-knee-bone-message {
+  color: red;
+  font-weight: bold;
+}
