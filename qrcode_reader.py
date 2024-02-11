@@ -117,6 +117,7 @@ img.save("qrcode_with_image.png")
 
 """""
 import cv2
+import webbrowser
 
 def read_qr_code(image_path):
     # Read the image
@@ -138,12 +139,13 @@ def read_qr_code(image_path):
         return None
 
 # Provide the path to the QR code image
-qr_image_path = "qrtrial.png"
+qr_image_path = "QR/WhatsApp Image 2024-02-08 at 22.21.32_85f3cb70.jpg"
 extracted_link = read_qr_code(qr_image_path)
 
 # Now you can open the extracted link (e.g., using a web browser)
 if extracted_link:
     print(f"Opening link: {extracted_link}")
+    webbrowser.open(extracted_link)
     # Add your code here to open the link programmatically
 else:
     print("QR code extraction failed.")
