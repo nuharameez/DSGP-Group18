@@ -1,10 +1,8 @@
+from flask import Flask, request, jsonify, send_from_directory, url_for
 import os
 import numpy as np
-from flask import Flask, request, jsonify, send_from_directory, url_for
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-import cv2
-import numpy as np
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 
@@ -24,27 +22,11 @@ knee_model = load_model(knee_model_path)
 knee_bone_model_path = 'knee_bone_identifier.h5'
 knee_bone_model = load_model(knee_bone_model_path)
 
-# Load the saved model for severity determination
-severity_model_path = 'Custom_CNN_with_VGG16.h5'
-severity_model = load_model(severity_model_path)
-
-# Define the categories
-categories = ['category1', 'category2', 'category3', 'category4']
-
-# Function to preprocess uploaded image
-def preprocess_image(image_path):
-    img_size = 256
-    img = cv2.imread(image_path)
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    resized = cv2.resize(img_rgb, (img_size, img_size))
-    return np.expand_dims(resized / 255.0, axis=0)
-
-# Function to get the grade for the image
-def get_grade(image_path):
-    preprocessed_img = preprocess_image(image_path)
-    prediction = severity_model.predict(preprocessed_img)
-    category_index = np.argmax(prediction)
-    return categories[category_index]
+def preprocess_image(file_path):
+    img = image.load_img(file_path, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0) / 255.0  # Normalize pixel values
+    return img_array
 
 @app.after_request
 def after_request(response):
@@ -69,9 +51,7 @@ def analyze_image():
         file.save(filename)
 
         # Load and preprocess the image for the knee model
-        img_array = image.load_img(filename, target_size=(224, 224))
-        img_array = image.img_to_array(img_array)
-        img_array = np.expand_dims(img_array, axis=0) / 255.0  # Normalize pixel values
+        img_array = preprocess_image(filename)
 
         # Get the URL of the uploaded image
         image_url = url_for('uploaded_file', filename=file.filename)
@@ -94,16 +74,7 @@ def analyze_image():
         # Map the knee prediction to 'Normal' or 'Abnormal'
         knee_result = 'Normal' if knee_prediction < 0.5 else 'Abnormal'
 
-        if knee_result == 'Normal':
-            # If the knee bone is normal, return the result
-            result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Normal', 'image_path': image_url}
-            print(result)
-            return jsonify(result)
-
-        # If knee bone is abnormal, determine severity
-        severity = get_grade(filename)
-
-        result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Abnormal', 'severity': severity, 'image_path': image_url}
+        result = {'knee_bone_result': knee_bone_result, 'normal_result': knee_result, 'image_path': image_url}
         print(result)
         return jsonify(result)
 
