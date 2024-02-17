@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing import image
 import cv2
 import numpy as np
 
-app = Flask(_name_, static_folder="build", static_url_path="/")
+app = Flask(__name__, static_folder="build", static_url_path="/")
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -29,7 +29,7 @@ severity_model_path = 'Custom_CNN_with_VGG16.h5'
 severity_model = load_model(severity_model_path)
 
 # Define the categories
-categories = ['category1', 'category2', 'category3', 'category4']
+categories = ['Doubtful: KL grading- 1', 'Minimal: KL grading- 2', 'Moderate: KL grading- 3', 'Extreme: KL grading- 4']
 
 # Function to preprocess uploaded image
 def preprocess_image(image_path):
@@ -118,6 +118,6 @@ def uploaded_file(filename):
 def index():
     return app.send_static_file('index.html')
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)

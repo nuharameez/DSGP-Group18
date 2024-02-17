@@ -4,8 +4,9 @@ import UploadPage from './UploadPage'; // Import the UploadPage component
 import axios from 'axios';
 
 const App = () => {
+  // State variables
   const [showModal, setShowModal] = useState(false);
-  const [signedIn, setSignedIn] = useState(false); // Add state for tracking sign-in status
+  const [signedIn, setSignedIn] = useState(false);
   const [qrCode, setQrCode] = useState('');
   const [kneeBone, setKneeBone] = useState('');
   const [normalOrNot, setNormalOrNot] = useState('');
@@ -15,11 +16,8 @@ const App = () => {
   const [analyzing, setAnalyzing] = useState(false);
   const [notKneeBone, setNotKneeBone] = useState(false);
 
+  // Functions to handle events
   const handleSignInClick = () => {
-    setShowModal(true);
-  };
-
-  const handleSignInStartScanningClick = () => {
     setShowModal(true);
   };
 
@@ -28,7 +26,7 @@ const App = () => {
   };
 
   const handleSignInModalSubmit = () => {
-    setSignedIn(true); // Update sign-in status to true
+    setSignedIn(true);
     setShowModal(false);
   };
 
@@ -80,7 +78,7 @@ const App = () => {
           setKneeBone(analysisResult.knee_bone_result);
           setNormalOrNot(analysisResult.normal_result);
           if (analysisResult.normal_result === 'Abnormal') {
-            setSeverity(analysisResult.severity); // Set severity if abnormal
+            setSeverity(analysisResult.severity);
           }
         }
       }, 4000);
@@ -161,7 +159,9 @@ const App = () => {
                       {normalOrNot === 'Abnormal' && (
                         <div className="result-item">
                           <p>Severity:</p>
-                          <p className="severity">{severity}</p>
+                          <p className={`severity ${severity.toLowerCase()}`}>
+                            {severity}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -180,7 +180,7 @@ const App = () => {
             <form onSubmit={handleSignInModalSubmit}>
               <div className="form-group">
                 <label htmlFor="hospitalName">Hospital Name:</label>
-                                <input type="text" id="hospitalName" name="hospitalName" />
+                <input type="text" id="hospitalName" name="hospitalName" />
               </div>
               <div className="form-group">
                 <label htmlFor="hospitalCode">Hospital Code:</label>
@@ -195,4 +195,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App;
