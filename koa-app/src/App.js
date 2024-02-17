@@ -9,6 +9,7 @@ const App = () => {
   const [qrCode, setQrCode] = useState('');
   const [kneeBone, setKneeBone] = useState('');
   const [normalOrNot, setNormalOrNot] = useState('');
+  const [severity, setSeverity] = useState('');
   const [imagePath, setImagePath] = useState('');
   const [uploading, setUploading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
@@ -39,6 +40,7 @@ const App = () => {
     setQrCode('');
     setKneeBone('');
     setNormalOrNot('');
+    setSeverity('');
     setImagePath('');
     setUploading(false);
     setAnalyzing(false);
@@ -77,6 +79,9 @@ const App = () => {
         } else {
           setKneeBone(analysisResult.knee_bone_result);
           setNormalOrNot(analysisResult.normal_result);
+          if (analysisResult.normal_result === 'Abnormal') {
+            setSeverity(analysisResult.severity); // Set severity if abnormal
+          }
         }
       }, 4000);
     } catch (error) {
@@ -153,6 +158,12 @@ const App = () => {
                       <p className={normalOrNot === 'Abnormal' ? 'abnormal-result' : 'normal-result'}>
                         {normalOrNot}
                       </p>
+                      {normalOrNot === 'Abnormal' && (
+                        <div className="result-item">
+                          <p>Severity:</p>
+                          <p className="severity">{severity}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -169,7 +180,7 @@ const App = () => {
             <form onSubmit={handleSignInModalSubmit}>
               <div className="form-group">
                 <label htmlFor="hospitalName">Hospital Name:</label>
-                <input type="text" id="hospitalName" name="hospitalName" />
+                                <input type="text" id="hospitalName" name="hospitalName" />
               </div>
               <div className="form-group">
                 <label htmlFor="hospitalCode">Hospital Code:</label>
@@ -184,4 +195,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App;
