@@ -6,15 +6,10 @@
     <title>Upload Image</title>
 </head>
 <body>
-    {% if grade %}
-    <h1>Grade: {{ grade }}</h1>
-    <img src="{{ image_file }}" alt="Uploaded Image" width="400">
-    {% else %}
     <h1>Upload an Image</h1>
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="file" accept="image/*" required>
         <input type="submit" value="Submit">
     </form>
-    {% endif %}
 </body>
 </html>

@@ -1,75 +1,47 @@
-from flask import Flask, render_template, request, jsonify
+import os
+from flask import Flask, render_template, request, redirect, url_for
 import cv2
 import numpy as np
 from keras.models import load_model
-from keras.applications.vgg16 import preprocess_input
-import joblib
-import os
-from werkzeug.utils import secure_filename
-from keras.applications.vgg16 import VGG16, preprocess_input
-
-# Load pre-trained VGG16 model
-base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
-
 
 app = Flask(__name__)
 
-# Load the pre-trained model
-model = load_model('VGG16KFold3.h5')
+# Load the saved model
+model_path = 'Custom_CNN_with_VGG16.h5'
+model = load_model(model_path)
 
-# Load the label encoder
-label_encoder = joblib.load('label_encoder_VGG16KFold3.joblib')
+# Define the categories
+categories = ['category1', 'category2', 'category3', 'category4']
 
-# Function to preprocess the uploaded image
+# Function to preprocess uploaded image
 def preprocess_image(image_path):
-    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    img = cv2.resize(img, (224, 224))
-    img = np.expand_dims(img, axis=0)
-    img = preprocess_input(img)
+    img_size = 256
+    img = cv2.imread(image_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    resized = cv2.resize(img_rgb, (img_size, img_size))
+    return np.expand_dims(resized / 255.0, axis=0)
 
-    # Extract features using VGG16
-    features = base_model.predict(img)
-    features_flat = features.reshape(1, -1)
+# Function to get the grade for the image
+def get_grade(image_path):
+    preprocessed_img = preprocess_image(image_path)
+    prediction = model.predict(preprocessed_img)
+    category_index = np.argmax(prediction)
+    return categories[category_index]
 
-    return features_flat
-
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
-
-    file = request.files['file']
-
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'})
-
-    try:
-        # Save the uploaded file
-        filename = secure_filename(file.filename)
-        file_path = os.path.join('uploads', filename)
-        file.save(file_path)
-
-        # Preprocess the uploaded image
-        img = preprocess_image(file_path)
-
-        # Make predictions
-        predictions = model.predict(img)
-        predicted_class = label_encoder.classes_[np.argmax(predictions)]
-
-        # Delete the uploaded file after processing
-        os.remove(file_path)
-
-        return jsonify({'class': predicted_class})
-    except Exception as e:
-        return jsonify({'error': str(e)})
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file:
+            file_path = os.path.join('uploads', file.filename)
+            file.save(file_path)
+            grade = get_grade(file_path)
+            return render_template('result.html', grade=grade, image_file=file_path)
+    return render_template('upload.html')
 
 if __name__ == '__main__':
-    # Create the 'uploads' directory if it doesn't exist
-    os.makedirs('uploads', exist_ok=True)
-
     app.run(debug=True)
