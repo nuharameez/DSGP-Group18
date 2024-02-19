@@ -8,14 +8,8 @@
 <body>
     <h1>Grade Selection</h1>
     <form action="/recommendations" method="post">
-        <label for="grade">Select Grade:</label>
-        <select name="grade" id="grade">
-            <option value="0">Grade 0</option>
-            <option value="1">Grade 1</option>
-            <option value="2">Grade 2</option>
-            <option value="3">Grade 3</option>
-            <option value="4">Grade 4</option>
-        </select>
+        <label for="grade">Enter Grade:</label>
+        <input type="text" id="grade" name="grade">
         <br><br>
         <input type="submit" value="Get Recommendations">
     </form>
