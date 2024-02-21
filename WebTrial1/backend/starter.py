@@ -35,8 +35,7 @@ def read_qr_code(image_path):
         print("No QR code found in the image.")
         return None
 
-
-
+"""""
 def download_image(url, save_path):
     try:
         # Send a GET request to the URL
@@ -54,7 +53,38 @@ def download_image(url, save_path):
     except Exception as e:
         print("Error downloading image:", str(e))
         return False
+"""""
 
+"""""
+def download_image(url, save_folder, filename):
+    try:
+        # Ensure the save folder exists, create it if not
+        if not os.path.exists(save_folder):
+            os.makedirs(save_folder)
+
+        # Construct the full save path
+        save_path = os.path.join(save_folder, filename)
+
+        # Send a GET request to the URL
+        response = requests.get(url)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Write the image content to a file
+            with open(save_path, 'wb') as f:
+                f.write(response.content)
+            return True, save_path  # Return success and the saved file path
+        else:
+            print("Failed to download image.")
+            return False, None
+    except Exception as e:
+        print("Error downloading image:", str(e))
+        return False, None
+
+save_folder = 'WebTrial/backend'
+filename = 'downloaded_image.png'
+"""""
+"""""
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
@@ -72,7 +102,7 @@ def predict():
             print(f"QR Code link: {qr_link}")
 
             # Download the image from the QR code link
-            image_path = 'downloaded_image.png'
+            image_path = 'downloaded_image.jpg'
             if download_image(qr_link, image_path):
 
         # Load and preprocess the image
@@ -88,22 +118,80 @@ def predict():
                 result = "Knee Bone" if predictions[0][0] > 0.5 else "Not a Knee Bone"
 
         # Remove the temporary image file
-                os.remove(temp_path)
+                #os.remove(temp_path)
 
         # Remove the downloaded image file
-                os.remove(image_path)
+                #os.remove(image_path)
 
                 print("Prediction result:", result)
 
-
-
         #return jsonify({"result": result})
                 return jsonify({"result": result, "QR_code_link": qr_link})
+                #return jsonify({"QR_code_link": qr_link})
             else:
                 return jsonify({"error": "Failed to download image from QR code link."})
 
         else:
             return jsonify({"error": "QR code extraction failed."})
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"error": str(e)})
+"""""
+
+@app.route('/decode_qr_code', methods=['POST'])
+def decode_qr_code():
+    try:
+        # Get the image from the request
+        image_file = request.files['image']
+
+        # Save the image temporarily
+        temp_path = 'temp.png'
+        image_file.save(temp_path)
+
+        # Read the QR code from the image
+        qr_link = read_qr_code(temp_path)
+
+        if qr_link:
+            print(f"QR Code link: {qr_link}")
+
+            return jsonify({"QR_code_link": qr_link})
+        else:
+            return jsonify({"error": "QR code extraction failed."})
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"error": str(e)})
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        # Get the image from the request
+        image_file = request.files['image']
+
+        # Save the image temporarily
+        temp_path = 'temp.png'
+        image_file.save(temp_path)
+
+        # Load and preprocess the image
+        img = image.load_img(temp_path, target_size=(224, 224))
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array /= 255.0  # Rescale to match the training data
+
+        # Make predictions using the loaded model
+        predictions = loaded_model.predict(img_array)
+
+        # Display the result
+        result = "Knee Bone" if predictions[0][0] > 0.5 else "Not a Knee Bone"
+
+        # Remove the temporary image file
+        os.remove(temp_path)
+
+        print("Prediction result:", result)
+
+        return jsonify({"result": result})
+
 
     except Exception as e:
         print("Error:", str(e))
