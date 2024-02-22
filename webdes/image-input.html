@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knee OA Detection and Classification</title>
+    <link rel="stylesheet" href="image-input.css">
+</head>
+<body>
+    <nav class="navigation">
+        <a href="#" class="logo">Knee OA Detection</a>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="content-container">
+        <div class="input-container">
+            <input type="file" id="imageInput" accept="image/*">
+            <div id="imageDisplay"></div>
+        </div>
+        <div class="result-container" id="resultContainer">
+            <!-- Results will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function() {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        var imageDisplay = document.getElementById('imageDisplay');
+                        imageDisplay.innerHTML = "";
+                        var uploadedImage = document.createElement('img');
+                        uploadedImage.src = e.target.result;
+                        uploadedImage.style.maxWidth = "100%";
+                        uploadedImage.style.maxHeight = "100%";
+                        uploadedImage.style.width = "auto";
+                        uploadedImage.style.height = "auto";
+                        imageDisplay.appendChild(uploadedImage);
+                    }
+                }
+                reader.readAsDataURL(file);
+
+                // Sample results (for experimental purposes)
+                var resultContainer = document.getElementById('resultContainer');
+                resultContainer.innerHTML = "<h2>Sample Results:</h2>";
+                resultContainer.innerHTML += "<p>Knee bone detected.</p>";
+                resultContainer.innerHTML += "<p>Knee bone is normal.</p>";
+                resultContainer.innerHTML += "<p>KL Grade: 0</p>";
+            }
+        });
+    </script>
+</body>
+</html>
