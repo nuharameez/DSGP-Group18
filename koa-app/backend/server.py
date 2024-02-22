@@ -5,6 +5,9 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import cv2
 import numpy as np
+import base64
+from io import BytesIO
+import qrcode
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 
@@ -46,6 +49,12 @@ def get_grade(image_path):
     category_index = np.argmax(prediction)
     return categories[category_index]
 
+# Function to decode QR code and retrieve file path
+def decode_qr_code(qr_image):
+    qr_detector = cv2.QRCodeDetector()
+    data, _, _ = qr_detector.detectAndDecode(qr_image)
+    return data.strip() if data else None
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -68,13 +77,23 @@ def analyze_image():
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filename)
 
+        # Decode QR code
+        qr_image = cv2.imread(filename)
+        qr_data = decode_qr_code(qr_image)
+
+        print("QR Code Data:", qr_data)  # Print QR code data
+
+        if qr_data:
+            image_path = qr_data
+        else:
+            image_path = filename
+
+        print("Image Path:", image_path)  # Print image path
+
         # Load and preprocess the image for the knee model
-        img_array = image.load_img(filename, target_size=(224, 224))
+        img_array = image.load_img(image_path, target_size=(224, 224))
         img_array = image.img_to_array(img_array)
         img_array = np.expand_dims(img_array, axis=0) / 255.0  # Normalize pixel values
-
-        # Get the URL of the uploaded image
-        image_url = url_for('uploaded_file', filename=file.filename)
 
         # Perform knee bone identification
         knee_bone_prediction = knee_bone_model.predict(img_array)
@@ -84,7 +103,7 @@ def analyze_image():
 
         if knee_bone_result == 'Not Bone':
             # If not a knee bone, return the result
-            result = {'knee_bone_result': 'Not a Knee Bone', 'image_path': image_url}
+            result = {'knee_bone_result': 'Not a Knee Bone', 'image_path': image_path}
             print(result)
             return jsonify(result)
 
@@ -96,14 +115,14 @@ def analyze_image():
 
         if knee_result == 'Normal':
             # If the knee bone is normal, return the result
-            result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Normal', 'image_path': image_url}
+            result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Normal', 'image_path': image_path}
             print(result)
             return jsonify(result)
 
         # If knee bone is abnormal, determine severity
-        severity = get_grade(filename)
+        severity = get_grade(image_path)
 
-        result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Abnormal', 'severity': severity, 'image_path': image_url}
+        result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Abnormal', 'severity': severity, 'image_path': image_path}
         print(result)
         return jsonify(result)
 
@@ -121,3 +140,4 @@ def index():
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
+

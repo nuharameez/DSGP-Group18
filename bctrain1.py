@@ -10,7 +10,7 @@ validate_path = r"C:\Users\multi\Desktop\All Folders\KneeKaggle\val"
 
 # Image size and batch size
 img_size = (224, 224)
-batch_size = 32
+batch_size = 60
 
 # Create data generators
 train_datagen = ImageDataGenerator(rescale=1./255)
@@ -55,12 +55,12 @@ model.compile(optimizer='adam',
 # Train the model
 history = model.fit(
     train_generator,
-    epochs=10,
+    epochs=50,
     validation_data=validate_generator
 )
 
 # Save the model
-model.save('knee_model1.h5')
+model.save('knee_model2.h5')
 
 
 # Evaluate on train data

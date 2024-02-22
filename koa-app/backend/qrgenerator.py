@@ -23,5 +23,5 @@ def generate_qr_code(file_path, output_file="qr_code.png"):
     print(f"QR code generated for file path: {file_path}")
 
 # Example usage:
-file_path = r"C:\Users\multi\Desktop\All Folders\auto_test\0\9006407_2.png"
-generate_qr_code(file_path, "qrcode.png")
+file_path = r"C:\Users\multi\Desktop\All Folders\auto_test\0\9003815_1.png"
+generate_qr_code(file_path, "normal.png")

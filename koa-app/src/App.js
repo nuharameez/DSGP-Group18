@@ -119,7 +119,7 @@ const App = () => {
             <h1 className="main-heading">Knee Osteoarthritis Detection</h1>
             <div className="content-container">
               <div className="input-container">
-                <h2>Insert QR code</h2>
+                <h2>Insert QR code or X-Ray image</h2>
                 <input
                   type="file"
                   id="qrCodeInput"
@@ -172,6 +172,10 @@ const App = () => {
           </>
         )}
       </div>
+
+      {/* Add space below the result box */}
+      <div style={{ marginBottom: '20px' }}></div>
+
       {showModal && (
         <div className="modal">
           <div className="modal-content">
