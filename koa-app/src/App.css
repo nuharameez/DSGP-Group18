@@ -1,0 +1,292 @@
+/* App.css */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+}
+
+.app-container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.header {
+  background-color: #ffffff;
+  padding: 20px 0;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+  margin-right: 20px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #000000;
+}
+
+.active {
+  text-decoration: underline;
+  text-decoration-color: #007bff;
+}
+
+.solid-button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.solid-button:hover {
+  background-color: #0056b3;
+}
+
+.outline-button {
+  background-color: transparent;
+  border: 2px solid #007bff;
+  color: #007bff;
+  padding: 10px 22px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.outline-button:hover {
+  color: #0056b3;
+  border-color: #0056b3;
+}
+
+.content {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.main-heading {
+  font-size: 3rem;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #333333;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 20% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+  max-width: 400px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.not-knee-bone-message {
+    color: red;
+}
+
+.result-container {
+  margin-top: 40px;
+}
+
+.uploading-message,
+.analyzing-message,
+.not-knee-bone-message {
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+.uploaded-image-container {
+  margin-top: 30px;
+}
+
+.uploaded-image {
+  margin-top: 20px;
+}
+
+.result-box {
+  margin-top: 30px;
+  text-align: left;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.result-box-left {
+  width: 48%;
+}
+
+.result-box-right {
+  width: 48%;
+  text-align: right;
+}
+
+.result-title {
+  font-size: 2rem;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.result-table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+}
+
+.result-table th,
+.result-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.result-table th {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.result-table td {
+  text-align: left;
+}
+
+.knee-bone-verified {
+  color: green;
+}
+
+.not-knee-bone {
+  color: red;
+}
+
+.abnormal-result {
+  color: red;
+}
+
+.severity {
+  font-weight: bold;
+  color: red;
+}
+
+.result-box-header {
+  background-color: #007bff;
+  color: #fff;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.result-box-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.result-info {
+  margin-bottom: 20px;
+}
+
+.result-info p {
+  font-size: 1.2rem;
+  margin: 5px 0;
+}
+
+.result-info .label {
+  font-weight: bold;
+}
+
+.result-info .value {
+  margin-left: 10px;
+}
+
+.result-summary {
+  margin-top: 30px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.result-summary-header {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.result-summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.result-summary-item p {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.result-summary-item .label {
+  font-weight: bold;
+}
+
+.result-summary-item .value {
+  margin-left: 10px;
+}
+
