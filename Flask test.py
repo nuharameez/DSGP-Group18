@@ -1,4 +1,4 @@
-"""# Import necessary libraries
+# Import necessary libraries
 from flask import Flask, render_template, request
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -60,9 +60,9 @@ def recommendations():
 
 # Run the Flask application
 if __name__ == '__main__':
-    app.run(debug=True)"""
+    app.run(debug=True)
 
-from flask import Flask, render_template, request
+"""from flask import Flask, render_template, request
 import joblib
 import pandas as pd
 
@@ -110,5 +110,4 @@ def get_recommendations():
     return render_template('recommendations.html', grade_description=grade_description, treatments=treatments)
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
+    app.run(debug=True)"""
