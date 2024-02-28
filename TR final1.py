@@ -144,7 +144,7 @@ test_accuracy = accuracy_score(y_test, y_test_pred)
 print(f"Testing Accuracy: {test_accuracy:.2f}")
 
 # Save the trained model to a file
-model_filename = 'random_forest_model_balanced.joblib'
+model_filename = 'random_forest_model_balanced.pkl'
 joblib.dump(rf_model, model_filename)
 print(f"Trained Random Forest model saved as {model_filename}")
 
