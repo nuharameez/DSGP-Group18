@@ -1,13 +1,11 @@
 import os
 import numpy as np
-from flask import Flask, request, jsonify, send_from_directory, url_for
+from flask import Flask, request, jsonify, send_from_directory
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import cv2
-import numpy as np
-import base64
-from io import BytesIO
-import qrcode
+import pandas as pd
+import joblib
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 
@@ -34,6 +32,12 @@ severity_model = load_model(severity_model_path)
 # Define the categories
 categories = ['Doubtful: KL grading- 1', 'Minimal: KL grading- 2', 'Moderate: KL grading- 3', 'Extreme: KL grading- 4']
 
+# Load treatments dataframe
+df = pd.read_csv('treatments.csv')
+
+# Load the trained model
+severity_prediction_model = joblib.load('rf1.pkl')
+
 # Function to preprocess uploaded image
 def preprocess_image(image_path):
     img_size = 256
@@ -54,6 +58,11 @@ def decode_qr_code(qr_image):
     qr_detector = cv2.QRCodeDetector()
     data, _, _ = qr_detector.detectAndDecode(qr_image)
     return data.strip() if data else None
+
+# Function to get treatments for a given severity level
+def get_treatments(severity_level):
+    treatments = df[df['Severity'] == severity_level]['Treatment']
+    return treatments.tolist()
 
 @app.after_request
 def after_request(response):
@@ -114,15 +123,18 @@ def analyze_image():
         knee_result = 'Normal' if knee_prediction < 0.5 else 'Abnormal'
 
         if knee_result == 'Normal':
-            # If the knee bone is normal, return the result
-            result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Normal', 'image_path': image_path}
-            print(result)
-            return jsonify(result)
+            # If the knee bone is normal, determine severity
+            severity = 0
+        else:
+            # If knee bone is abnormal, determine severity
+            severity_level = get_grade(image_path)
+            severity = int(severity_level.split("-")[-1].strip())
 
-        # If knee bone is abnormal, determine severity
-        severity = get_grade(image_path)
+        # Get treatments for the determined severity level
+        treatments = get_treatments(severity)
 
-        result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Abnormal', 'severity': severity, 'image_path': image_path}
+        result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': knee_result, 'severity': severity,
+                  'treatments': treatments, 'image_path': image_path}
         print(result)
         return jsonify(result)
 
@@ -140,4 +152,3 @@ def index():
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
-
