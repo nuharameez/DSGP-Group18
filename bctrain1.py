@@ -3,9 +3,11 @@ from tensorflow.keras import layers, models
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-class KneeModel:
-    def __init__(self, train_path, validate_path, test_path, img_size=(224, 224), batch_size=60):
+class KneeNormalityChecker:
+    def __init__(self, train_path, validate_path, test_path, img_size=(224, 224), batch_size=36):
         self.train_path = train_path
         self.validate_path = validate_path
         self.test_path = test_path
@@ -63,7 +65,14 @@ class KneeModel:
                            loss='binary_crossentropy',
                            metrics=['accuracy'])
 
-    def train(self, epochs=5):
+    def plot_confusion_matrix(self, cm, labels):
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=labels, yticklabels=labels)
+        plt.xlabel('Predicted Labels')
+        plt.ylabel('True Labels')
+        plt.title('Confusion Matrix')
+        plt.show()
+    def train(self, epochs=50):
         history = self.model.fit(
             self.train_generator,
             epochs=epochs,
@@ -82,6 +91,8 @@ class KneeModel:
         train_cm = confusion_matrix(train_labels, train_predictions)
         validate_cm = confusion_matrix(validate_labels, validate_predictions)
 
+        # Visualize confusion matrix for validation data
+        self.plot_confusion_matrix(validate_cm, labels=["normal", "abnormal"])
         print("Confusion Matrix - Train Data:")
         print(train_cm)
 
@@ -108,6 +119,9 @@ class KneeModel:
 
         test_cm = confusion_matrix(test_labels, test_predictions)
 
+        # Visualize confusion matrix for test data
+        self.plot_confusion_matrix(test_cm, labels=["normal", "abnormal"])
+
         print("Confusion Matrix - Test Data:")
         print(test_cm)
 
@@ -129,7 +143,7 @@ validate_path = r"C:\Users\multi\Desktop\All Folders\KneeKaggle\val"
 test_path = r"C:\Users\multi\Desktop\All Folders\KneeKaggle\test"
 
 # Initialize model
-knee_model = KneeModel(train_path, validate_path, test_path)
+knee_model = KneeNormalityChecker(train_path, validate_path, test_path)
 
 # Preprocess images
 knee_model.preprocess_image()
@@ -146,4 +160,4 @@ knee_model.validate()
 # Test model
 knee_model.test()
 # Save model
-knee_model.save_model('knee_model2.h5')
+knee_model.save_model('knee_normality_checker1.h5')
