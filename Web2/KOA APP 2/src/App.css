@@ -1,0 +1,276 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Updated CSS for Navigation Bar */
+.navigation {
+    background-color: transparent; /* Set background color to transparent */
+    padding: 20px 5%; /* Add padding to the navigation bar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 90%; /* Limit the width of the navigation bar */
+    max-width: 1200px; /* Set maximum width to prevent it from stretching too much */
+    left: 50%; /* Position from the left edge */
+    transform: translateX(-50%); /* Center align the navigation bar */
+    z-index: 1000; /* Ensure the navigation bar stays on top */
+}
+
+.logo {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase; /* Convert text to uppercase */
+    letter-spacing: 2px; /* Add letter spacing */
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-links li {
+    margin-right: 20px;
+}
+
+.nav-links li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    text-transform: uppercase; /* Convert text to uppercase */
+}
+
+.nav-links li a:hover {
+    color: #ffc107;
+}
+
+
+
+.content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url("https://cdn.builder.io/api/v1/image/assets/TEMP/caeb44bb2517a9b3d35b19110e27960f30370bb791492a23fdaa7188dd78d1fb?apiKey=c955fab17579493e99f69624394ae9bb&"); /* Specify the path to your background image */
+    background-size: cover;
+    background-position: center;
+}
+
+.input-container,
+.result-container {
+    width: 80%; /* Adjust the width percentage as needed */
+    max-width: 400px; /* Set a maximum width to prevent the boxes from becoming too wide */
+    height: 400px;
+    background-color: rgba(255, 255, 255, 0.8); /* Keep the translucent background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 10px; /* Add margin between the boxes */
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .content-container {
+        flex-direction: column;
+    }
+    .input-container,
+    .result-container {
+        width: 90%; /* Adjust the width percentage for smaller screens */
+    }
+}
+
+.input-container {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.input-container input[type="file"] {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.input-container input[type="file"]:hover {
+    background-color: #e0e0e0;
+}
+
+.image-placeholder {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid #ccc; /* Add border at the bottom */
+}
+
+.image-placeholder img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Ensure the image fits inside the container */
+}
+
+
+/* Style the button */
+#processButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #15d39a;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#processButton:hover {
+    background-color: #1a8170;
+}
+
+
+h1 {
+    color: #333;
+}
+
+.result-container {
+    width: 40%;
+    display: flex;
+    flex-direction: column; /* Stack boxes vertically */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    width: 100%;
+}
+
+.result-box {
+    width: calc(100% - 20px); /* Adjust the width to fit the container */
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px; /* Add margin between the boxes */
+}
+
+.result-box h3 {
+    margin-top: 0;
+}
+
+.result-box p {
+    margin-bottom: 0;
+}
+
+.custom-icon {
+    display: inline-block;
+    width: 100px; /* Set the width of the icon */
+    height: 100px; /* Set the height of the icon */
+    border: 2px dashed #ccc; /* Add border to indicate drop zone */
+    border-radius: 10px; /* Add border radius */
+    cursor: pointer; /* Change cursor to indicate clickable element */
+    text-align: center; /* Center the icon horizontally */
+    line-height: 130px; /* Center the icon vertically */
+}
+
+.custom-icon img {
+    width: 50px; /* Set the width of the icon image */
+    height: 50px; /* Set the height of the icon image */
+    pointer-events: none; /* Disable pointer events on the icon image */
+}
+
+.custom-icon:hover {
+    background-color: #f0f0f0; /* Change background color on hover */
+}
+
+.custom-icon input[type="file"] {
+    display: none; /* Hide the default file input */
+}
+
+.input-container input[type="file"] {
+    display: none; /* Hide the original file input */
+}
+
+#imageDisplay {
+    display: flex; /* Change display property to flex */
+    justify-content: center; /* Center the image horizontally */
+    align-items: center; /* Center the image vertically */
+    width: 70%; /* Set width to 100% */
+    height: 70%; /* Set a fixed height for the image display */
+    border: 2px dashed #ccc; /* Add border to indicate drop zone */
+    border-radius: 10px; /* Add border radius */
+}
+
+#imageDisplay img {
+    max-width: 100%; /* Ensure the image fits inside the container */
+    max-height: 100%; /* Ensure the image fits inside the container */
+    object-fit: contain; /* Ensure the image fits inside the container */
+}
+
+#processButton {
+    margin-top: 10px; /* Add margin to separate button from other content */
+    display: block; /* Ensure button is displayed as block element */
+}
+
+body-login {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("https://cdn.builder.io/api/v1/image/assets/TEMP/caeb44bb2517a9b3d35b19110e27960f30370bb791492a23fdaa7188dd78d1fb?apiKey=c955fab17579493e99f69624394ae9bb&"); /* Specify the path to your background image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.sign-in-form {
+    max-width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sign-in-form h2 {
+    margin-top: 0;
+}
+
+.sign-in-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.sign-in-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sign-in-form button:hover {
+    background-color: #555;
+}
