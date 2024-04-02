@@ -119,6 +119,11 @@ const App = () => {
         setImagePath(`data:image/jpeg;base64,${analysisResult.image_base64}`);
       }
         setProcessing(false); // Set processing status to false after all results are set
+        // Additional code to remove QR code image and display analyzed image
+        const qrImage = document.getElementById('qrImage');
+        if (qrImage) {
+            qrImage.remove(); // Remove the QR code image
+        }
     } catch (error) {
       console.error('Error analyzing image:', error);
     }

@@ -92,6 +92,8 @@ def analyze_image():
 
         if qr_data:
             image_path = qr_data
+            if not os.path.exists(image_path):
+                return jsonify({'error': 'Image path from QR code does not exist'})
         else:
             image_path = filename
 
@@ -110,8 +112,16 @@ def analyze_image():
 
         if knee_bone_result == 'Not Bone':
             # If not a knee bone, return the result
-            result = {'knee_bone_result': 'Not a Knee Bone', 'image_path': image_path}
+            result = {'knee_bone_result': 'Not a Knee Bone', 'normal_result': 'Not Applicable',
+                      'severity': 'Not Applicable', 'image_path': image_path}
             print(result)
+
+            # Read image file as bytes and encode it to base64
+            with open(image_path, "rb") as img_file:
+                img_bytes = img_file.read()
+                img_base64 = base64.b64encode(img_bytes).decode('utf-8')
+
+            result['image_base64'] = img_base64
             return jsonify(result)
 
         # Perform knee model inference
@@ -122,8 +132,16 @@ def analyze_image():
 
         if knee_result == 'Normal':
             # If the knee bone is normal, return the result
-            result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Normal', 'image_path': image_path}
+            result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': 'Normal', 'severity': 'Not Applicable',
+                      'image_path': image_path}
             print(result)
+
+            # Read image file as bytes and encode it to base64
+            with open(image_path, "rb") as img_file:
+                img_bytes = img_file.read()
+                img_base64 = base64.b64encode(img_bytes).decode('utf-8')
+
+            result['image_base64'] = img_base64
             return jsonify(result)
 
         # If knee bone is abnormal, determine severity
@@ -144,7 +162,6 @@ def analyze_image():
 
     else:
         return jsonify({'error': 'File type not allowed'})
-
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
