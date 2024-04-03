@@ -1,4 +1,4 @@
-/* image-input.css */
+/* Global styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,19 +6,19 @@ body {
     background-color: #f4f4f4;
 }
 
-/* Updated CSS for Navigation Bar */
+/* Navigation Bar */
 .navigation {
-    background-color: transparent; /* Set background color to transparent */
-    padding: 20px 5%; /* Add padding to the navigation bar */
+    background-color: transparent;
+    padding: 20px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
-    width: 90%; /* Limit the width of the navigation bar */
-    max-width: 1200px; /* Set maximum width to prevent it from stretching too much */
-    left: 50%; /* Position from the left edge */
-    transform: translateX(-50%); /* Center align the navigation bar */
-    z-index: 1000; /* Ensure the navigation bar stays on top */
+    width: 90%;
+    max-width: 1200px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
 }
 
 .logo {
@@ -26,8 +26,8 @@ body {
     font-size: 24px;
     font-weight: bold;
     text-decoration: none;
-    text-transform: uppercase; /* Convert text to uppercase */
-    letter-spacing: 2px; /* Add letter spacing */
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .nav-links {
@@ -45,33 +45,34 @@ body {
     color: #fff;
     text-decoration: none;
     transition: color 0.3s ease;
-    text-transform: uppercase; /* Convert text to uppercase */
+    text-transform: uppercase;
 }
 
 .nav-links li a:hover {
     color: #ffc107;
 }
 
+/* Main content container */
 .content-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: url("https://cdn.builder.io/api/v1/image/assets/TEMP/caeb44bb2517a9b3d35b19110e27960f30370bb791492a23fdaa7188dd78d1fb?apiKey=c955fab17579493e99f69624394ae9bb&"); /* Specify the path to your background image */
+    background-image: url("https://cdn.builder.io/api/v1/image/assets/TEMP/caeb44bb2517a9b3d35b19110e27960f30370bb791492a23fdaa7188dd78d1fb?apiKey=c955fab17579493e99f69624394ae9bb&");
     background-size: cover;
     background-position: center;
 }
 
 .input-container,
 .result-container {
-    width: 96%; /* Adjust the width percentage */
-    max-width: 480px; /* Set a maximum width to prevent the boxes from becoming too wide */
-    height: 480px; /* Adjust the height */
-    background-color: rgba(255, 255, 255, 0.8); /* Keep the translucent background */
+    width: 80%;
+    max-width: 400px;
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 10px; /* Add margin between the boxes */
+    margin: 10px;
     overflow: hidden;
 }
 
@@ -81,10 +82,11 @@ body {
     }
     .input-container,
     .result-container {
-        width: 94%; /* Adjust the width percentage for smaller screens */
+        width: 90%;
     }
 }
 
+/* Input container styles */
 .input-container {
     width: 70%;
     display: flex;
@@ -112,19 +114,18 @@ body {
 
 .image-placeholder {
     width: 100%;
-    height: 300px; /* Set the height of the placeholder */
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 2px solid #ccc; /* Add border at the bottom */
+    border-bottom: 2px solid #ccc;
 }
 
 .image-placeholder img {
     max-width: 100%;
     max-height: 100%;
+    object-fit: contain;
 }
 
-/* Style the button */
 #processButton {
     margin-top: 10px;
     padding: 10px 20px;
@@ -141,26 +142,23 @@ body {
     background-color: #1a8170;
 }
 
-h1 {
-    color: #333;
-}
-
+/* Result container styles */
 .result-container {
     width: 40%;
     display: flex;
-    flex-direction: column; /* Stack boxes vertically */
-    align-items: center; /* Center horizontally */
-    justify-content: center; /* Center vertically */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 100%;
 }
 
 .result-box {
-    width: calc(100% - 20px); /* Adjust the width to fit the container */
+    width: calc(100% - 20px);
     background-color: rgba(255, 255, 255, 0.8);
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px; /* Add margin between the boxes */
+    margin-bottom: 10px;
 }
 
 .result-box h3 {
@@ -173,39 +171,110 @@ h1 {
 
 .custom-icon {
     display: inline-block;
-    width: 100px; /* Set the width of the icon */
-    height: 100px; /* Set the height of the icon */
-    border: 2px dashed #ccc; /* Add border to indicate drop zone */
-    border-radius: 10px; /* Add border radius */
-    cursor: pointer; /* Change cursor to indicate clickable element */
-    text-align: center; /* Center the icon horizontally */
-    line-height: 130px; /* Center the icon vertically */
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 130px;
 }
 
 .custom-icon img {
-    width: 50px; /* Set the width of the icon image */
-    height: 50px; /* Set the height of the icon image */
-    pointer-events: none; /* Disable pointer events on the icon image */
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
 }
 
 .custom-icon:hover {
-    background-color: #f0f0f0; /* Change background color on hover */
+    background-color: #f0f0f0;
 }
 
 .custom-icon input[type="file"] {
-    display: none; /* Hide the default file input */
+    display: none;
 }
 
 .input-container input[type="file"] {
-    display: none; /* Hide the original file input */
+    display: none;
 }
 
 #imageDisplay {
-    display: none; /* Hide the image initially */
-    cursor: pointer; /* Change cursor to pointer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    height: 70%;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+}
+
+#imageDisplay img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 #processButton {
-    margin-top: 10px; /* Add margin to separate button from other content */
-    display: block; /* Ensure button is displayed as block element */
+    margin-top: 10px;
+    display: block;
+}
+
+/* Login Page styles */
+body-login {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("https://cdn.builder.io/api/v1/image/assets/TEMP/caeb44bb2517a9b3d35b19110e27960f30370bb791492a23fdaa7188dd78d1fb?apiKey=c955fab17579493e99f69624394ae9bb&");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.sign-in-form {
+    max-width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sign-in-form h2 {
+    margin-top: 0;
+}
+
+.sign-in-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.sign-in-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.sign-in-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sign-in-form button:hover {
+    background-color: #555;
 }
