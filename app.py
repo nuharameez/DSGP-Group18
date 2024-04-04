@@ -19,8 +19,8 @@ def allowed_file(filename):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Load knee model
-knee_model_path = 'knee_model1.h5'
+# Load knee model for normality check
+knee_model_path = 'knee_normality_checker.h5'
 knee_model = load_model(knee_model_path)
 
 # Load knee bone identifier model
@@ -31,7 +31,7 @@ knee_bone_model = load_model(knee_bone_model_path)
 severity_model_path = 'Custom_CNN_with_VGG16.h5'
 severity_model = load_model(severity_model_path)
 
-# Load the trained Random Forest Classifier model for severity prediction
+# Load the trained Random Forest Classifier model for treatment validation
 rf_model = joblib.load('random_forest_model.pkl')
 
 # Define the categories
