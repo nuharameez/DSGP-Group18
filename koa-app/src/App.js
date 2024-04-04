@@ -64,41 +64,30 @@ const LoginPage = ({ onLogin }) => {
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(true);
-  const [age, setAge] = useState(''); // Added state for age
-  const [gender, setGender] = useState(''); // Added state for gender
+  const [fileToUpload, setFileToUpload] = useState(null);
+  const [processing, setProcessing] = useState(false);
+  const [imageUploaded, setImageUploaded] = useState(false);
+  const [imagePath, setImagePath] = useState('');
+  const [detectionResult, setDetectionResult] = useState('');
+  const [normalResult, setNormalResult] = useState('');
+  const [gradeResult, setGradeResult] = useState('');
+  const [treatmentResults, setTreatmentResults] = useState([]);
 
   const handleLogin = () => {
     setShowLogin(false);
   };
 
-  const [showModal, setShowModal] = useState(false);
-  const [qrCode, setQrCode] = useState('');
-  const [detectionResult, setDetectionResult] = useState('');
-  const [normalResult, setNormalResult] = useState('');
-  const [gradeResult, setGradeResult] = useState('');
-  const [treatmentResult, setTreatmentResult] = useState('');
-  const [imagePath, setImagePath] = useState('');
-  const [fileToUpload, setFileToUpload] = useState(null);
-  const [processing, setProcessing] = useState(false);
-  const [imageUploaded, setImageUploaded] = useState(false);
-
-  const handleModalClose = () => {
-    setShowModal(false);
-  };
-
   const handleFileUpload = async () => {
-    if (!fileToUpload || !age || !gender) return; // Check if age and gender are provided
+    if (!fileToUpload) return;
 
     setDetectionResult('');
     setNormalResult('');
     setGradeResult('');
-    setTreatmentResult('');
+    setTreatmentResults([]);
     setProcessing(true);
 
     const formData = new FormData();
     formData.append('file', fileToUpload);
-    formData.append('age_category', age); // Add age to form data
-    formData.append('gender', gender); // Add gender to form data
 
     try {
       const response = await axios.post('http://localhost:5000/analyze', formData, {
@@ -120,15 +109,8 @@ const App = () => {
         setGradeResult(`${analysisResult.severity}`);
       }, 2100);
 
-      let treatment = 'No treatment needed'; // Default treatment for normal knee
-      if (analysisResult.normal_result !== 'Normal') {
-        setTimeout(() => {
-          treatment = `Treatment: ${analysisResult.treatments}`;
-        }, 2800);
-      }
-
       setTimeout(() => {
-        setTreatmentResult(treatment);
+        setTreatmentResults(analysisResult.treatments);
       }, 2800);
 
       setTimeout(() => {
@@ -169,17 +151,8 @@ const App = () => {
               <div id="imageDisplay" onClick={() => document.getElementById('imageInput').click()}>
                 {imageUploaded && <img src={imagePath} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
               </div>
-              <label htmlFor="age" style={{ marginTop: '20px' }}>Age:</label>
-              <input type="text" id="age" value={age} onChange={(e) => setAge(e.target.value)} style={{ marginBottom: '10px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }} />
-              <label htmlFor="gender" style={{ marginBottom: '10px' }}>Gender:</label>
-              <select id="gender" value={gender} onChange={(e) => setGender(e.target.value)} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}>
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-              <button id="processButton" onClick={handleFileUpload} disabled={!imageUploaded} style={{ marginTop: '10px', padding: '10px 20px', backgroundColor: '#15d39a', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s ease' }}>Process Image</button>
+              <button id="processButton" onClick={handleFileUpload} disabled={!imageUploaded}>Process Image</button>
             </div>
-
             <div className="result-container" id="resultContainer">
               {processing && <p>Analyzing...</p>}
               {!processing && (
@@ -196,9 +169,17 @@ const App = () => {
                     <h3>Severity</h3>
                     <p id="gradeResult">{gradeResult}</p>
                   </div>
-                  <div className="result-box">
+                  <div className="result-box" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                     <h3>Treatment</h3>
-                    <p id="treatmentResult">{treatmentResult}</p>
+                    {treatmentResults.length > 0 ? (
+                      <ul>
+                        {treatmentResults.map((treatment, index) => (
+                          <li key={index}>{treatment}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p></p>
+                    )}
                   </div>
                 </>
               )}
