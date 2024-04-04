@@ -12,8 +12,10 @@ app = Flask(__name__, static_folder="build", static_url_path="/")
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -29,14 +31,12 @@ knee_bone_model = load_model(knee_bone_model_path)
 severity_model_path = 'Custom_CNN_with_VGG16.h5'
 severity_model = load_model(severity_model_path)
 
+# Load the trained Random Forest Classifier model for severity prediction
+rf_model = joblib.load('random_forest_model.pkl')
+
 # Define the categories
 categories = ['Doubtful: KL grading- 1', 'Minimal: KL grading- 2', 'Moderate: KL grading- 3', 'Extreme: KL grading- 4']
 
-# Load treatments dataframe
-df = pd.read_csv('treatments.csv')
-
-# Load the trained model
-severity_prediction_model = joblib.load('rf1.pkl')
 
 # Function to preprocess uploaded image
 def preprocess_image(image_path):
@@ -46,6 +46,7 @@ def preprocess_image(image_path):
     resized = cv2.resize(img_rgb, (img_size, img_size))
     return np.expand_dims(resized / 255.0, axis=0)
 
+
 # Function to get the grade for the image
 def get_grade(image_path):
     preprocessed_img = preprocess_image(image_path)
@@ -53,16 +54,13 @@ def get_grade(image_path):
     category_index = np.argmax(prediction)
     return categories[category_index]
 
+
 # Function to decode QR code and retrieve file path
 def decode_qr_code(qr_image):
     qr_detector = cv2.QRCodeDetector()
     data, _, _ = qr_detector.detectAndDecode(qr_image)
     return data.strip() if data else None
 
-# Function to get treatments for a given severity level
-def get_treatments(severity_level):
-    treatments = df[df['Severity'] == severity_level]['Treatment']
-    return treatments.tolist()
 
 @app.after_request
 def after_request(response):
@@ -70,6 +68,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
+
 
 @app.route('/analyze', methods=['POST'])
 def analyze_image():
@@ -130,24 +129,51 @@ def analyze_image():
             severity_level = get_grade(image_path)
             severity = int(severity_level.split("-")[-1].strip())
 
-        # Get treatments for the determined severity level
-        treatments = get_treatments(severity)
+        # Use the trained model to predict treatments for the severity level
+        predicted_treatments = predict_treatments(severity)
+
+        # Evaluate the accuracy of treatment recommendation using the Random Forest Classifier
+        if severity >= 0:
+            severity_prediction = rf_model.predict(np.array([[severity]]))
+            if severity_prediction == severity:
+                accuracy = 'Treatments accurately predicted.'
+            else:
+                accuracy = 'Treatments inaccurately predicted.'
+        else:
+            accuracy = 'N/A'
+
 
         result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': knee_result, 'severity': severity,
-                  'treatments': treatments, 'image_path': image_path}
+                  'treatments': predicted_treatments, 'accuracy': accuracy, 'image_path': image_path}
         print(result)
         return jsonify(result)
 
     else:
         return jsonify({'error': 'File type not allowed'})
 
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
+
+
+def predict_treatments(severity_level):
+    # Load the dataset containing treatment recommendations
+    df = pd.read_csv("Treatement dataset1.csv")
+
+    # Filter the dataset to get treatments for the given severity level
+    treatments = df[df['Severity'] == severity_level]['Treatment'].unique()
+
+    if len(treatments) > 0:
+        return treatments.tolist()
+    else:
+        return ['No treatment recommendation available']
+
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
