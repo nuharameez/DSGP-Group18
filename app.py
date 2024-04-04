@@ -164,7 +164,7 @@ def index():
 
 def predict_treatments(severity_level):
     # Load the dataset containing treatment recommendations
-    df = pd.read_csv("Treatement dataset1.csv")
+    df = pd.read_csv("Treatment dataset1.csv")
 
     # Filter the dataset to get treatments for the given severity level
     treatments = df[df['Severity'] == severity_level]['Treatment'].unique()
