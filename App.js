@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css'; // Import the main CSS file
 import axios from 'axios';
 
@@ -102,19 +102,32 @@ const App = () => {
       }, 700);
 
       setTimeout(() => {
-        setNormalResult(`Knee Bone is ${analysisResult.normal_result}`);
+        if (analysisResult.knee_bone_result === 'Not a Knee Bone') {
+          // Clear the results if it's not a knee bone
+          setNormalResult('');
+          setGradeResult('');
+          setTreatmentResults([]);
+        } else {
+          setNormalResult(`Knee Bone is ${analysisResult.normal_result}`);
+        }
       }, 1400);
 
       setTimeout(() => {
-        setGradeResult(`${analysisResult.severity}`);
+        if (analysisResult.knee_bone_result !== 'Not a Knee Bone') {
+          setGradeResult(`${analysisResult.severity}`);
+        }
       }, 2100);
 
       setTimeout(() => {
-        setTreatmentResults(analysisResult.treatments);
+        if (analysisResult.knee_bone_result !== 'Not a Knee Bone') {
+          setTreatmentResults(analysisResult.treatments);
+        }
       }, 2800);
 
       setTimeout(() => {
-        setImagePath(`data:image/jpeg;base64,${analysisResult.image_base64}`);
+        if (analysisResult.knee_bone_result !== 'Not a Knee Bone') {
+          setImagePath(`data:image/jpeg;base64,${analysisResult.image_base64}`);
+        }
         setProcessing(false);
       }, 3500);
     } catch (error) {
