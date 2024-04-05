@@ -6,6 +6,7 @@ from tensorflow.keras.preprocessing import image
 import cv2
 import pandas as pd
 import joblib
+import base64
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 
@@ -93,6 +94,8 @@ def analyze_image():
 
         if qr_data:
             image_path = qr_data
+            if not os.path.exists(image_path):
+                return jsonify({'error': 'Image path from QR code does not exist'})
         else:
             image_path = filename
 
@@ -113,6 +116,13 @@ def analyze_image():
             # If not a knee bone, return the result
             result = {'knee_bone_result': 'Not a Knee Bone', 'image_path': image_path}
             print(result)
+            
+            # Read image file as bytes and encode it to base64
+            with open(image_path, "rb") as img_file:
+                img_bytes = img_file.read()
+                img_base64 = base64.b64encode(img_bytes).decode('utf-8')
+            result['image_base64'] = img_base64
+            
             return jsonify(result)
 
         # Perform knee model inference
@@ -146,6 +156,13 @@ def analyze_image():
         result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': knee_result, 'severity': severity,
                   'treatments': predicted_treatments, 'accuracy': accuracy, 'image_path': image_path}
         print(result)
+        
+        # Read image file as bytes and encode it to base64
+        with open(image_path, "rb") as img_file:
+            img_bytes = img_file.read()
+            img_base64 = base64.b64encode(img_bytes).decode('utf-8')
+        result['image_base64'] = img_base64
+        
         return jsonify(result)
 
     else:
