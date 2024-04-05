@@ -141,7 +141,7 @@ const App = () => {
         if (qrImage) {
             qrImage.remove(); // Remove the QR code image
         }
-      
+
     } catch (error) {
       console.error('Error analyzing image:', error);
     }
@@ -175,6 +175,7 @@ const App = () => {
               <input type="file" id="imageInput" accept="image/*" style={{ display: 'none' }} onChange={handleInputChange} />
               <div id="imageDisplay" onClick={() => document.getElementById('imageInput').click()}>
                 {imageUploaded && <img src={imagePath} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
+                {!imageUploaded && <p>Click here to upload an image</p>}
               </div>
               <button id="processButton" onClick={handleFileUpload} disabled={!imageUploaded}>Process Image</button>
             </div>
