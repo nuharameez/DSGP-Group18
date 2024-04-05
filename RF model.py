@@ -1,83 +1,76 @@
-from sklearn.metrics import accuracy_score, classification_report
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix  # Corrected import
+from imblearn.over_sampling import RandomOverSampler
 import joblib
-import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Load the combined dataset
-df = pd.read_csv('Treatement dataset2.csv')
+# Load the manually created dataset
+df = pd.read_csv("Treatement dataset1.csv")
 
-# Split the data into features (X) and target variable (y)
-X = df.drop(['Severity'], axis=1)  # Features
-y = df['Severity']  # Target variable
+# Check for missing values
+print(df.isnull().sum())
 
-# Apply one-hot encoding to categorical variables
-# Here, we're assuming Treatment is the only categorical variable
-ct = ColumnTransformer([('encoder', OneHotEncoder(), ['Treatment', 'Age_Category', 'Gender'])], remainder='passthrough')
-X_encoded = ct.fit_transform(X)
+# Convert categorical columns to numerical using label encoding
+label_encoder = LabelEncoder()
+df['Treatment'] = label_encoder.fit_transform(df['Treatment'])
 
-# Split the encoded data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=42)
+# Split data into features (X) and target (y)
+X = df.drop(columns=['Severity'])
+y = df['Severity']  # Set the target as 'Severity'
 
-# Initialize the random forest classifier
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
+# Balance the dataset using oversampling
+oversampler = RandomOverSampler(random_state=42)
+X_resampled, y_resampled = oversampler.fit_resample(X, y)
 
-# Train the model
-clf.fit(X_train, y_train)
+# Split resampled data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=42)
+
+# Train a Random Forest Classifier model
+rf_model = RandomForestClassifier(n_estimators=15)
+rf_model.fit(X_train, y_train)
+
+# Evaluate the model
+rf_predictions_train = rf_model.predict(X_train)
+rf_accuracy_train = accuracy_score(y_train, rf_predictions_train)
+print("Training Accuracy:", rf_accuracy_train)
+
+# Evaluate the model
+rf_predictions = rf_model.predict(X_test)
+rf_accuracy = accuracy_score(y_test, rf_predictions)
+print("Random Forest Classifier Accuracy:", rf_accuracy)
+print("Classification Report:")
+print(classification_report(y_test, rf_predictions))
+
+# Compute confusion matrix
+plot_confusion_matrix = confusion_matrix(y_test, rf_predictions)
+
+# Plot confusion matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(plot_confusion_matrix, annot=True, fmt="d", cmap="Blues", cbar=False)
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.show()
 
 # Save the trained model
-joblib.dump(clf, 'rf_model.pkl')
+joblib.dump(rf_model, 'random_forest_model.pkl')
 
-import joblib
+# Load the saved model
+loaded_model = joblib.load('random_forest_model.pkl')
 
-# Function to get treatments for a given severity level
-def get_treatments(severity_level, age_category, gender, model):
-    treatments = df[(df['Severity'] == severity_level) & (df['Age_Category'] == age_category) & (df['Gender'] == gender)]['Treatment']
-    return treatments.tolist()
+# Define treatments for each severity level
+treatments = df.groupby('Severity')['Treatment'].apply(lambda x: list(x.unique())).to_dict()
 
-# Load the trained model
-model = joblib.load('rf_model.pkl')
+# Example: Use the trained model to predict treatments for a new severity level
+new_data = np.array([[1]])  # Severity level
+predicted_treatments = treatments[new_data[0, 0]]
 
-# Function to recommend treatments based on user inputs
-def recommend_treatments():
-    severity_input = input("Enter severity level (0 to 4) or 'exit' to quit: ")
-    if severity_input.lower() == 'exit':
-        print("Exiting...")
-        return
-    try:
-        severity_level = int(severity_input)
-        if severity_level < 0 or severity_level > 4:
-            print("Invalid severity level. Please enter a number between 0 and 4.")
-            return
-        age_category = input("Enter age category (<18, 18-35, 35-60, >60): ")
-        gender = input("Enter gender (Male/Female): ")
-        severity_treatments = get_treatments(severity_level, age_category, gender, model)
-        if severity_treatments:
-            print(f"Treatments for severity level {severity_level}, age category {age_category}, and gender {gender}:")
-            for treatment in severity_treatments:
-                print("-", treatment)
-        else:
-            print(f"No treatments found for severity level {severity_level}, age category {age_category}, and gender {gender}.")
-    except ValueError:
-        print("Invalid input. Please enter a valid severity level (0 to 4) or 'exit' to quit.")
-
-# Test the function repeatedly until 'exit' is entered
-while True:
-    recommend_treatments()
-    decision = input("Do you want to recommend treatments again? (yes/no): ")
-    if decision.lower() == 'no':
-        print("Exiting the loop...")
-        break
-
-# Predict on the test set
-y_pred = clf.predict(X_test)
-
-# Print Training Accuracy
-train_predictions = clf.predict(X_train)
-train_accuracy = accuracy_score(y_train, train_predictions)
-print("Training Accuracy:", train_accuracy)
-
-# Print the classification report
-print(classification_report(y_test, y_pred))
+# Print all treatments for the predicted severity level
+print("Predicted Treatments for Severity Level", new_data[0, 0], ":")
+for treatment in predicted_treatments:
+    print("- ", label_encoder.inverse_transform([treatment])[0])
