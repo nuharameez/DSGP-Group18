@@ -116,13 +116,13 @@ def analyze_image():
             # If not a knee bone, return the result
             result = {'knee_bone_result': 'Not a Knee Bone', 'image_path': image_path}
             print(result)
-            
+
             # Read image file as bytes and encode it to base64
             with open(image_path, "rb") as img_file:
                 img_bytes = img_file.read()
                 img_base64 = base64.b64encode(img_bytes).decode('utf-8')
             result['image_base64'] = img_base64
-            
+
             return jsonify(result)
 
         # Perform knee model inference
@@ -144,25 +144,24 @@ def analyze_image():
 
         # Evaluate the accuracy of treatment recommendation using the Random Forest Classifier
         if severity >= 0:
-            severity_prediction = rf_model.predict(np.array([[severity]]))
-            if severity_prediction == severity:
-                accuracy = 'Treatments accurately predicted.'
-            else:
-                accuracy = 'Treatments inaccurately predicted.'
+            actual_treatments = predict_treatments(severity)
+            match = all(item in predicted_treatments for item in actual_treatments)
+            accuracy = 'Treatments accurately predicted.' if match else 'Treatments inaccurately predicted.'
         else:
             accuracy = 'N/A'
 
-
         result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': knee_result, 'severity': severity,
-                  'treatments': predicted_treatments, 'accuracy': accuracy, 'image_path': image_path}
+                  'treatments': predicted_treatments, 'accuracy': accuracy, 'image_path': image_path,
+                  'treatment_match': match}
         print(result)
-        
+        print('Treatment recommendation accuracy: ', accuracy)
+
         # Read image file as bytes and encode it to base64
         with open(image_path, "rb") as img_file:
             img_bytes = img_file.read()
             img_base64 = base64.b64encode(img_bytes).decode('utf-8')
         result['image_base64'] = img_base64
-        
+
         return jsonify(result)
 
     else:
