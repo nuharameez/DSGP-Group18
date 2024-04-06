@@ -260,6 +260,13 @@ body-login {
     box-sizing: border-box;
 }
 
+/* Style the error messages */
+.error {
+    color: red;
+    font-size: 12px; /* Set the font size of the error message */
+    margin-top: 5px; /* Add some spacing above the error message */
+}
+
 .sign-in-form button {
     width: 100%;
     padding: 10px;
@@ -273,4 +280,10 @@ body-login {
 
 .sign-in-form button:hover {
     background-color: #555;
+}
+
+.success {
+    color: green; /* Set text color to green */
+    font-size: 14px; /* Set font size to 14px */
+    margin-top: 5px; /* Add some spacing above the success message */
 }
