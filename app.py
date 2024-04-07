@@ -35,9 +35,14 @@ severity_model = load_model(severity_model_path)
 # Load the trained Random Forest Classifier model for treatment validation
 rf_model = joblib.load('random_forest_model.pkl')
 
+# Load the dataset containing treatment recommendations
+df_treatments = pd.read_csv("Treatment dataset1.csv")
+
 # Define the categories
 categories = ['Doubtful: KL grading- 1', 'Minimal: KL grading- 2', 'Moderate: KL grading- 3', 'Extreme: KL grading- 4']
 
+# Define treatments for each severity level based on the dataset
+treatments = df_treatments.groupby('Severity')['Treatment'].apply(lambda x: list(x.unique())).to_dict()
 
 # Function to preprocess uploaded image
 def preprocess_image(image_path):
@@ -140,19 +145,26 @@ def analyze_image():
             severity = int(severity_level.split("-")[-1].strip())
 
         # Use the trained model to predict treatments for the severity level
-        predicted_treatments = predict_treatments(severity)
+        predicted_severity = rf_model.predict(pd.DataFrame([[severity]], columns=['Severity']))
 
-        # Evaluate the accuracy of treatment recommendation using the Random Forest Classifier
+        # Get predicted treatments based on the severity level
+        predicted_treatments = treatments.get(predicted_severity[0], ['No treatment recommendation available'])
+
+        # Evaluate the accuracy of treatment recommendation
+        accuracy = ''
         if severity >= 0:
-            actual_treatments = predict_treatments(severity)
+            actual_treatments = treatments.get(severity, ['No treatment recommendation available'])
             match = all(item in predicted_treatments for item in actual_treatments)
             accuracy = 'Treatments accurately predicted.' if match else 'Treatments inaccurately predicted.'
-        else:
-            accuracy = 'N/A'
 
-        result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': knee_result, 'severity': severity,
-                  'treatments': predicted_treatments, 'accuracy': accuracy, 'image_path': image_path,
-                  'treatment_match': match}
+        if severity == 0:
+            sev_result = 'Normal: KL grading- 0'
+        else:
+            sev_result = categories[severity-1]
+
+        result = {'knee_bone_result': 'Knee Bone Verified', 'normal_result': knee_result, 'severity': sev_result,
+                  'treatments': predicted_treatments, 'accuracy': accuracy, 'image_path': image_path}
+
         print(result)
         print('Treatment recommendation accuracy: ', accuracy)
 
@@ -176,19 +188,6 @@ def uploaded_file(filename):
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
-
-
-def predict_treatments(severity_level):
-    # Load the dataset containing treatment recommendations
-    df = pd.read_csv("Treatment dataset1.csv")
-
-    # Filter the dataset to get treatments for the given severity level
-    treatments = df[df['Severity'] == severity_level]['Treatment'].unique()
-
-    if len(treatments) > 0:
-        return treatments.tolist()
-    else:
-        return ['No treatment recommendation available']
 
 
 if __name__ == '__main__':
